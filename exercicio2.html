@@ -1,0 +1,192 @@
+<html>
+<style>
+    input {
+        box-shadow: none;
+        border: 1px solid lightgray;
+        border-radius: 3px;
+        padding: 5px 5px 5px 5px;
+    }
+
+    input:invalid {
+        border-color: rgb(255, 55, 55);
+    }
+
+    td {
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 3px;
+    }
+
+    button {
+        padding: 4px 24px;
+        border-radius: 5px;
+        border-width: 0.1;
+    }
+
+    select {
+        padding: 2px 6px;
+        margin-left: 5;
+        margin-right: 5;
+    }
+
+</style>
+
+<body>
+    <form id="form1" name="form1" action="cpf.php" method="post">
+        <table>
+          
+            <!-- NUMERO 2 -->
+            <tr>
+                <td>Data</td>
+                <td>
+                    <input type="text" id="data" name="data" pattern="\d{1,2}/\d{1,2}/\d{4}" required>
+                </td>
+            <tr>
+                <td>Dias úteis</td>
+                <td>
+                    <input type="text" id="diasuteis" name="diasuteis" pattern="^[1-9]+[0-9]*$" required>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button type="button">Enviar</button>
+                </td>
+            </tr>
+            </tr>
+          
+        </table>
+        <!-- <button type="button" id="button1" onclick="valida();">Enviar</button> -->
+    </form>
+    <div id="mensagem" align="center"
+        style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
+</body>
+<script>
+    function mostra() {
+        var input = document.getElementById("outra");
+        if (document.getElementById("cidade").value == "outra") {
+            input.style.display = "inline";
+            input.disabled = false;
+        } else {
+            input.style.display = "none";
+            input.value = "";
+            input.disabled = true;
+        }
+    }
+
+    function muda() {
+        var select = document.getElementById("cidade");
+        select.innerHTML = "";
+        switch (document.getElementById("uf").value) {
+            case "PR":
+                select.options[0] = new Option("Curitiba", "Curitiba");
+                select.options[1] = new Option("Paranagua", "Paranagua");
+                break;
+            case "SC":
+                select.options[0] = new Option("Blumenau", "Blumenau");
+                select.options[1] = new Option("Florianopolis", "Florianopolis");
+                break;
+            case "SP":
+                select.options[0] = new Option("Campinas", "Campinas");
+                select.options[1] = new Option("Sao Paulo", "Sao Paulo");
+                break;
+            case "RS":
+                select.options[0] = new Option("Pelotas", "Pelotas");
+                select.options[1] = new Option("Porto Alegre", "Porto Alegre");
+                select.options[2] = new Option("Rio Grande", "Rio Grande");
+                break;
+        }
+        select.options[select.options.length] = new Option("outra...", "outra");
+        select.selectedIndex = 0;
+        mostra();
+    }
+
+    function monta() {
+        var input = document.getElementById("quantidade");
+        input.value = Math.max(0, Math.min(5, input.value));
+        var table = document.getElementById("table1");
+        while (table.rows.length < input.value) {
+            table.insertRow(-1).innerHTML = "<td>" + table.rows.length + "</td><td><input type=\"text\" id=\"telefone1_" + table.rows.length + "\" name=\"telefone1_" + table.rows.length + "\" pattern=\"^[0-9]{2} [0-9]{4,5}-[0-9]{4}$\" required></td>";
+        }
+        while (table.rows.length > input.value) {
+            table.deleteRow(-1);
+        }
+    }
+
+    function insere() {
+        var table = document.getElementById("table2");
+        if (table.rows.length < 5) {
+            table.insertRow(-1).innerHTML = "" + table.rows.length + "<input type=\"text\" id=\"telefone2_" + table.rows.length + "\" name=\"telefone2_" + table.rows.length + "\" pattern=\"^[0-9]{2} [0-9]{4,5}-[0-9]{4}$\" required>";
+        }
+    }
+
+    function myFunction() {
+        var x = document.createElement("input");
+        var sel = document.createElement("select");
+        var opt1 = document.createElement("option");
+        var opt2 = document.createElement("option");
+        var opt3 = document.createElement("option");
+        var opt4 = document.createElement("option");
+
+        opt1.value = "value1";
+        opt1.text = "+";
+        opt2.value = "value2";
+        opt2.text = "-";
+        opt3.value = "value3";
+        opt3.text = "*";
+        opt4.value = "value4";
+        opt4.text = "/";
+
+        sel.add(opt1, null);
+        sel.add(opt2, null);
+        sel.add(opt3, null);
+        sel.add(opt4, null);
+        x.required = true
+        x.setAttribute("type", "text");
+        x.setAttribute("id", "valor");
+        x.setAttribute("name", "valor");
+        x.setAttribute("pattern", "^[0-9]{9}-[0-9]{2}$");
+
+        document.getElementById("a").appendChild(sel);
+        document.getElementById("a").appendChild(x);
+    }
+
+
+    function apaga() {
+        document.getElementById("table2").deleteRow(-1);
+    }
+
+    function mensagem(cor, texto) {
+        var div = document.getElementById("mensagem");
+        div.innerHTML = texto;
+        div.style.display = "block";
+        div.style.backgroundColor = cor;
+        setTimeout(function () {
+            div.style.display = "none";
+        }, 3000);
+    }
+
+    function valida() {
+        var ids = ["inteiro", "real", "literal", "nome", "data", "hora", "cpf", "email", "telefone", "cep", "placa", "outra"];
+        for (var input of document.getElementsByTagName("input")) {
+            if ((input.id.startsWith("telefone1_")) || (input.id.startsWith("telefone2_"))) {
+                ids.push(input.id);
+            }
+        }
+        for (var id of ids) {
+            var input = document.getElementById(id);
+            if (!input.disabled) {
+                var regexp = new RegExp(input.pattern);
+                if (!regexp.test(input.value)) {
+                    mensagem("red", "ERRO");
+                    input.value = "";
+                    input.focus();
+                    return;
+                }
+            }
+        }
+        mensagem("green", "OK");
+        document.getElementById("form1").submit();
+    }
+</script>
+
+</html>
