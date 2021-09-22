@@ -8,7 +8,7 @@
     }
 
     input:invalid {
-        border-color: rgb(199, 113, 113);
+        border-color: rgb(255, 55, 55);
     }
 td{
     font-family: Arial, Helvetica, sans-serif;
@@ -31,7 +31,7 @@ table {
 </style>
 
 <body>
-    <form id="form1" name="form1" action="formularios-validacao-passo2.php" method="post">
+    <form id="form1" name="form1" action="cpf.php" method="post">
         <table>
             <!-- <tr>
                 <td>Inteiro</td>
@@ -74,7 +74,7 @@ table {
             <tr>
                 <td>CPF</td>
                 <td>
-                    <input type="text" id="cpf" name="cpf" pattern="^[0-9]{9}-[0-9]{2}$" required>
+                    <input type="text" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" required placeholder="999.999.999-99">
                 </td>
                 <tr>
                     <td></td>
@@ -84,16 +84,16 @@ table {
                 </td>
                 </tr>
             </tr>
-            
+            <!-- NUMERO 2 -->
             <tr>
                 <td>Data</td>
                 <td>
-                    <input type="text" id="data" name="data" pattern="^[0-9]{9}-[0-9]{2}$" required>
+                    <input type="text" id="data" name="data" pattern="\d{1,2}/\d{1,2}/\d{4}" required>
                 </td>
                 <tr>
                 <td>Dias úteis</td>
                 <td>
-                    <input type="text" id="diasuteis" name="diasuteis" pattern="^[0-9]{9}-[0-9]{2}$" size="10" required>
+                    <input type="text" id="diasuteis" name="diasuteis" pattern="^[1-9]+[0-9]*$" required>
                 </td>
                 </tr>
             <tr>
@@ -103,6 +103,7 @@ table {
                 </td>
             </tr>
             </tr>
+            <!-- NUMERO 3-->
 
                         <tr>
                             <td>Valor</td>
