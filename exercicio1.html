@@ -29,25 +29,26 @@ select {
 </style>
 
 <body>
-    <form id="form1" name="form1" action="cpf.php" method="post">
+    <form action="cpf.php" method="post">
         <table>
-
             <tr>
                 <td>CPF</td>
                 <td>
-                    <input type="text" id="cpf" name="cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" required placeholder="999.999.999-99">
+                    <input type="text" id="cpf" name="cpf" placeholder="xxxxxxxxxxx" required pattern = "[0-9]{11}"/>
                 </td>
                 <tr>
                     <td></td>
                 <td>
-                <button type="submit">Enviar</button>
-                
+                <button name="botao1" type="submit">Enviar</button>
                 </td>
                 </tr>
             </tr>
-         
+            </table>
+        </form>
+        </body>
+  <!--- 
         </table>
-        <!-- <button type="button" id="button1" onclick="valida();">Enviar</button> -->
+         <button type="button" id="button1" onclick="valida();">Enviar</button> 
     </form>
     <div id="mensagem" align="center"
         style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
@@ -180,5 +181,5 @@ select {
         document.getElementById("form1").submit();
     }
 </script>
-
+-->
 </html>
