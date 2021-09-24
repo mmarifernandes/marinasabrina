@@ -31,7 +31,7 @@
 </style>
 
 <body>
-    <form id="form1" name="form1" action="cpf.php" method="post">
+    <form id="form1" name="form1" action="data.php" method="post">
         <table>
           
             <!-- NUMERO 2 -->
@@ -43,13 +43,13 @@
             <tr>
                 <td>Dias úteis</td>
                 <td>
-                    <input type="text" id="diasuteis" name="diasuteis" pattern="^[1-9]+[0-9]*$" required>
+                    <input type="text" id="dias" name="dias" pattern="^[1-9]+[0-9]*$" required>
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td>
-                    <button type="submit">Enviar</button>
+                    <button name='botao2' type="submit">Enviar</button>
                 </td>
             </tr>
             </tr>
@@ -57,7 +57,8 @@
         </table>
         <!-- <button type="button" id="button1" onclick="valida();">Enviar</button> -->
     </form>
-    <div id="mensagem" align="center"
+</body>
+   <!-- <div id="mensagem" align="center"
         style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
 </body>
 <script>
@@ -187,6 +188,6 @@
         mensagem("green", "OK");
         document.getElementById("form1").submit();
     }
-</script>
+</script> --->
 
 </html>
