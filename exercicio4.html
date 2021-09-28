@@ -36,22 +36,22 @@
             <tr>
                 <td>Operando 1</td>
                 <td>
-                    <input type="text" id="numeroextenso" name="numeroextenso" pattern="^[a-z]+( [a-z]+)*$" size="50" required>
+                    <input type="text" id="numeroextenso" name="numeroextenso" pattern="^[A-Za-z-zÀ-ú']{4,}]*$" required>
                 </td>
             <tr>
                 <td>Operador</td>
                 <td>
                     <select id="operador" name="operador">
-                        <option value="value1" selected>+</option>
-                        <option value="value2">-</option>
-                        <option value="value3">*</option>
-                        <option value="value3">/</option>
+                        <option value="+" selected>+</option>
+                        <option value="-">-</option>
+                        <option value="*">*</option>
+                        <option value="/">/</option>
                     </select>
                 </td>
             </tr>
             <td>Operando 2</td>
             <td>
-                <input type="text" id="numeroextenso2" name="numeroextenso2" pattern="[A-Za-z, ]*$" size="50" required>
+                <input type="text" id="numeroextenso2" name="numeroextenso2" pattern="[A-Za-z-zÀ-ú']{4,}]*$"  required>
             </td>
             <tr>
                 <td></td>
@@ -62,7 +62,6 @@
             </tr>
 
         </table>
-        <!-- <button type="button" id="button1" onclick="valida();">Enviar</button> -->
     </form>
     <div id="mensagem" align="center"
         style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
