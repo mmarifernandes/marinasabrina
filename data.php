@@ -5,54 +5,44 @@
 só calcula se data e dias úteis forem válidos
 soma a quantidade de dias úteis à data e mostra a data resultante
 * dias úteis são os dias da semana de segunda a sexta que não são feriados nacionais
-(Confraternização Universal, Carnaval, Sexta-feira Santa, Páscoa, Tiradentes, Dia Mundial do Trabalho, Corpus Christi,
+(Confraternização Universal, Tiradentes, Dia Mundial do Trabalho,
 Independência do Brasil, Nossa Senhora Aparecida, Finados, Proclamação da República e Natal) */
 
-function formata($data) {
-    $data = $_POST["data"];
-    $ano = substr($data, 6, 4);
-    $mes = substr($data, 3, 2);
-    $dia = substr($data, 0, 2);
- return mktime(0, 0, 0, $mes, $dia, $ano);  
- }
 
 /*function checaData($data) {
     $data = explode('/', $_POST["data"]);
     $d = $data[0];
     $m = $data[1];
     $a = $data[2];
-    $checa = checkdate($m,$d,$a);
+    $checa = checkdate($m, $d, $a);
 
 if ($checa == true){
    return true;
 } else {
    return false;
-} }
+} } */
 
-*/
-function feriados($ano, $pos) {
-    $dia = 86400;
-    $datas = array();
-    $datas['pascoa'] = easter_date($ano);
-    $datas['sexta_santa'] = $datas['pascoa'] - (2 * $dia);
-    $datas['carnaval'] = $datas['pascoa'] - (47 * $dia);
-    $datas['corpus_christi'] = $datas['pascoa'] + (60 * $dia);
-    $feriados = array(
-        '01/01',
-        date('d/m',$datas['carnaval']),
-        date('d/m',$datas['sexta_santa']),
-        date('d/m',$datas['pascoa']),
-        '21/04',
-        '01/05',
-        date('d/m',$datas['corpus_christi']),
-        '07/09',
-        '12/10',
-        '02/11',
-        '15/11',
-        '25/12'
-    );
-    return $feriados[$pos]."/".$ano;
+function diasUteis($data, $dias) {
+    $data = substr($_POST["data"], 0, 10); #tem q mudar pro formato americano pq o date não funciona na data brasileira
+    $dias = $_POST["dias"];
+    if (preg_match("(/)", $data) == true) {
+        $data = implode("-", array_reverse(explode("/", $data)));
+    }
+    $feriados = array("01-01", "04-21", "05-01", "09-07", "10-12", "11-02", "11-15", "12-25");
+    $array = explode("-", $data);
+    $c = 0;
+    $qtd = 0;
+    while ($qtd < $dias) {
+        $c++;
+        $dia = date("m-d", strtotime('+' . $c . 'day', strtotime($data)));
+        if (($diasemana = date( 'w', strtotime( '+' . $c . 'day', mktime(0, 0, 0, $array[1], $array[2], $array[0])))) != '0' && $diasemana != '6' && !in_array($dia, $feriados)) {
+            $qtd++;
+        }
+    }
+    return date("d/m/Y", strtotime('+'. $c .'day', strtotime($data)));
 }
+
+echo diasUteis($data, $dias);
 
 ?>
 </body>
