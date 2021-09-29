@@ -43,7 +43,7 @@ function diasUteis($data, $dias) {
     while ($qtd < $dias) {
         $c++;
         $dia = date("m-d", strtotime('+' . $c . 'day', strtotime($data)));
-        if (($diasemana = date( 'w', strtotime( '+' . $c . 'day', mktime(0, 0, 0, $array[1], $array[2], $array[0])))) != '0' && $diasemana != '6' && !in_array($dia, $feriados)) {
+        if (($diasemana = date( 'w', strtotime('+' . $c . 'day', mktime(0, 0, 0, $array[1], $array[2], $array[0])))) != '0' && $diasemana != '6' && !in_array($dia, $feriados)) {
             $qtd++;
         }
     }
