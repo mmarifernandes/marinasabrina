@@ -28,7 +28,15 @@ function diasUteis($data, $dias) {
     if (preg_match("(/)", $data) == true) {
         $data = implode("-", array_reverse(explode("/", $data)));
     }
-    $feriados = array("01-01", "04-21", "05-01", "09-07", "10-12", "11-02", "11-15", "12-25");
+    $feriados = array(
+        "01-01", 
+        "04-21", 
+        "05-01", 
+        "09-07", 
+        "10-12", 
+        "11-02", 
+        "11-15", 
+        "12-25");
     $array = explode("-", $data);
     $c = 0;
     $qtd = 0;
