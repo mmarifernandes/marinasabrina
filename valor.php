@@ -28,7 +28,7 @@ $x=0;
 
 $valor = number_format($valor, 2, ".", ".");
 $inteiro = explode(".", $valor);
-for($i=0;$i<count($inteiro);$i++)
+for($i=0; $i<count($inteiro); $i++)
 for($y=strlen($inteiro[$i]);$y<3;$y++)
 $inteiro[$i] = "0".$inteiro[$i];
 
