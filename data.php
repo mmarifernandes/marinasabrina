@@ -9,8 +9,8 @@ soma a quantidade de dias úteis à data e mostra a data resultante
 Independência do Brasil, Nossa Senhora Aparecida, Finados, Proclamação da República e Natal) */
 
 
-/*function checaData($data) {
-    $data = explode('/', $_POST["data"]);
+function checaData($data) { #CHECA SE A DATA É REAL
+    $data = explode("/", $_POST["data"]);
     $d = $data[0];
     $m = $data[1];
     $a = $data[2];
@@ -19,10 +19,19 @@ Independência do Brasil, Nossa Senhora Aparecida, Finados, Proclamação da Rep
 if ($checa == true){
    return true;
 } else {
-   return false;
-} } */
+   echo 'DATA INVÁLIDA!';
+} } 
+
+function checaDias($dias) {
+    $dias = $_POST['dias'];
+if (!is_numeric($dias) || $dias < 0 || is_float(floatval($dias)) == true) {
+  echo 'DIA INVÁLIDO!';
+} else {
+    return true;
+} }
 
 function diasUteis($data, $dias) {
+    if (checaData($data) == true && checaDias($dias) == true) { 
     $data = substr($_POST["data"], 0, 10); #tem q mudar pro formato americano pq o date não funciona na data brasileira
     $dias = $_POST["dias"];
     if (preg_match("(/)", $data) == true) {
@@ -42,12 +51,13 @@ function diasUteis($data, $dias) {
     $qtd = 0;
     while ($qtd < $dias) {
         $c++;
-        $dia = date("m-d", strtotime('+' . $c . 'day', strtotime($data)));
-        if (($diasemana = date( 'w', strtotime('+' . $c . 'day', mktime(0, 0, 0, $array[1], $array[2], $array[0])))) != '0' && $diasemana != '6' && !in_array($dia, $feriados)) {
+        $dia = date("m-d", strtotime('+'.$c.'day', strtotime($data)));
+        if (($diasemana = date('w', strtotime('+'.$c.'day', mktime(0, 0, 0, $array[1], $array[2], $array[0])))) != '0' && $diasemana != '6' && !in_array($dia, $feriados)) {
             $qtd++;
         }
     }
-    return date("d/m/Y", strtotime('+'. $c .'day', strtotime($data)));
+    return date("d/m/Y", strtotime("+".$c."day", strtotime($data)));
+}
 }
 
 echo diasUteis($data, $dias);
