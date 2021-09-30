@@ -7,7 +7,11 @@ soma a quantidade de dias úteis à data e mostra a data resultante
 * dias úteis são os dias da semana de segunda a sexta que não são feriados nacionais
 (Confraternização Universal, Tiradentes, Dia Mundial do Trabalho,
 Independência do Brasil, Nossa Senhora Aparecida, Finados, Proclamação da República e Natal) */
-
+echo "<b>POST</b>";
+echo "<pre>";
+var_dump($_POST);
+echo "</pre>";
+echo "<hr>";
 
 function checaData($data) { #CHECA SE A DATA É REAL
     $data = explode("/", $_POST["data"]);
@@ -24,7 +28,7 @@ if ($checa == true){
 
 function checaDias($dias) {
     $dias = $_POST['dias'];
-if (!is_numeric($dias) || $dias < 0 || is_float(floatval($dias)) == true) {
+if (!is_numeric($dias) || $dias < 0) {
   echo 'DIA INVÁLIDO!';
 } else {
     return true;
@@ -61,6 +65,11 @@ function diasUteis($data, $dias) {
 }
 
 echo diasUteis($data, $dias);
+
+
+function feriadosMoveis($data) {
+    
+}
 
 ?>
 </body>
