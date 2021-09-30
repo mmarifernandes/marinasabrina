@@ -13,26 +13,21 @@ var_dump($_POST);
 echo "</pre>";
 echo "<hr>";
 
-function checaData($data) { #CHECA SE A DATA É REAL
+function checaData($data) { //CHECA SE A DATA É REAL
     $data = explode("/", $_POST["data"]);
     $d = $data[0];
     $m = $data[1];
     $a = $data[2];
     $checa = checkdate($m, $d, $a);
+if ($checa == true) { return true; } else { echo 'DATA INVÁLIDA!'; } 
 
-if ($checa == true){
-   return true;
-} else {
-   echo 'DATA INVÁLIDA!';
-} } 
+} 
 
-function checaDias($dias) {
+function checaDias($dias) { //CHECA SE O DIA É VALIDO
     $dias = $_POST['dias'];
-if (!is_numeric($dias) || $dias < 0) {
-  echo 'DIA INVÁLIDO!';
-} else {
-    return true;
-} }
+if (!is_numeric($dias) || $dias < 0) { echo 'DIA INVÁLIDO!'; } else { return true; } 
+
+}
 
 function diasUteis($data, $dias) {
     if (checaData($data) == true && checaDias($dias) == true) { 
@@ -49,7 +44,7 @@ function diasUteis($data, $dias) {
         "10-12", 
         "11-02", 
         "11-15", 
-        "12-25");
+        "12-25"); // FALTA FERIADOS MÓVEIS! EASTER_DATE()
     $array = explode("-", $data);
     $c = 0;
     $qtd = 0;
@@ -68,7 +63,7 @@ echo diasUteis($data, $dias);
 
 
 function feriadosMoveis($data) {
-    
+
 }
 
 ?>
