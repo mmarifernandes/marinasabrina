@@ -50,7 +50,7 @@ foreach ($words as $word) {
         continue;
     }
     else{
-        if ($somar == 1) {
+        if($somar == 1) {
             $total += $numeros[$word];
             // echo("<script>console.log('PHP: " . 'somar = 1'. "');</script>");
             // echo("<script>console.log('PHP: " . 'somou o e'. "');</script>");
@@ -78,9 +78,9 @@ foreach ($words as $word) {
             $resultado += $total;
             // echo("<script>console.log('PHP: " . '>1000 resultado recebe total'. "');</script>");
             // echo("<script>console.log('PHP: " . $resultado. "');</script>");
+            $total = 0;
             $ultimo = '';
             $somar = 0;
-            $total = 0;
         }
     }
 }
