@@ -8,7 +8,6 @@ echo "<br>";
 echo count($_POST['valor']);
 echo "<br>";
 
-
 ?>
 </body>
 </html>

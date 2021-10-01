@@ -24,7 +24,6 @@ if (strpos($valor,",") > 0)
 $singular = array("centavo", "real", "mil", "milhão", "bilhão", "trilhão", "quatrilhão");
 $plural = array("centavos", "reais", "mil", "milhões", "bilhões", "trilhões","quatrilhões");
 
-
 $centenas = array("", "cem", "duzentos", "trezentos", "quatrocentos",
 "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
 $dezenas = array("", "dez", "vinte", "trinta", "quarenta", "cinquenta",
