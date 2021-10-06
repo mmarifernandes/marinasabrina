@@ -28,12 +28,38 @@ function checaDias($dias) { //CHECA SE O DIA É VALIDO
 if (!is_numeric($dias) || $dias < 0) { echo 'DIA INVÁLIDO!'; } else { return true; } 
 
 }
-
+function feriadosMoveis() {
+    $ano = date('Y', strtotime($_POST['data']));
+    $dia = 86400;
+    $datas = array();
+    $datas['pascoa'] = easter_date($ano);
+    $datas['sextasanta'] = $datas['pascoa'] - (2 * $dia);
+    $datas['carnaval'] = $datas['pascoa'] - (47 * $dia);
+    $datas['corpuschristi'] = $datas['pascoa'] + (60 * $dia);
+    $feriadosmoveis = array(
+    date('m-d', $datas['carnaval']),
+    date('m-d', $datas['sextasanta']),
+    date('m-d', $datas['pascoa']),
+    date('m-d', $datas['corpuschristi']),
+    ); 
+    return $feriadosmoveis;
+    }
+     print_r(feriadosMoveis());
 
 function diasUteis($data, $dias) {
     if (checaData($data) == true && checaDias($dias) == true) { 
     $data = substr($_POST["data"], 0, 10); #tem q mudar pro formato americano pq o date não funciona na data brasileira
-    $feriados = feriados($data);
+    $feriadosMoveis = feriadosMoveis();
+    $feriadosFixos = array(
+        "01-01", 
+        "04-21", 
+        "05-01", 
+        "09-07", 
+        "10-12", 
+        "11-02", 
+        "11-15", 
+        "12-25",
+    ); 
     $dias = $_POST["dias"];
     if (preg_match("(/)", $data) == true) {
         $data = implode("-", array_reverse(explode("/", $data)));
@@ -44,7 +70,8 @@ function diasUteis($data, $dias) {
     while ($qtd < $dias) {
         $c++;
         $diaa = date("m-d", strtotime('+'.$c.'day', strtotime($data)));
-        if (($diasemana = date('w', strtotime('+'.$c.'day', mktime(0, 0, 0, $array[1], $array[2], $array[0])))) != '0' && $diasemana != '6' && !in_array($diaa, $feriados)) {
+        $d = date("m-d", strtotime('+'.$c.'day', strtotime($_POST['data'])));
+        if (($diasemana = date('w', strtotime('+'.$c.'day', mktime(0, 0, 0, $array[1], $array[2], $array[0])))) != '0' && $diasemana != '6' && !in_array($diaa, $feriadosFixos) && !in_array($d, $feriadosMoveis)) {
             $qtd++;
         }
     }
@@ -52,39 +79,10 @@ function diasUteis($data, $dias) {
 }
 }
 
-function feriados($ano) {
-$ano = date('Y', strtotime($ano));
-$dia = 86400;
-/*$datas = array();
-$datas['pascoa'] = easter_date($ano);
-$datas['sextasanta'] = $datas['pascoa'] - (2 * $dia);
-$datas['carnaval'] = $datas['pascoa'] - (47 * $dia);
-$datas['corpuschristi'] = $datas['pascoa'] + (60 * $dia);*/
-$datas = array(
-    'pascoa' => easter_date($ano),
-    'sextasanta' => 'pascoa' - (2 * $dia),
-    'carnaval' => 'pascoa' - (47 * $dia),
-    'corpuschristi' => 'pascoa' + (60 * $dia)
-);
-$feriados = array(
-    "01-01", 
-    "04-21", 
-    "05-01", 
-    "09-07", 
-    "10-12", 
-    "11-02", 
-    "11-15", 
-    "12-25",
-date('m-d', $datas['carnaval']),
-date('m-d', $datas['sextasanta']),
-date('m-d', $datas['pascoa']),
-date('m-d', $datas['corpuschristi']),
-); 
 
-    return $feriados;
-}
+
 echo diasUteis($data, $dias);
-print_r(feriados($anodadata));
+//print_r(feriadosMoveis($data));
 ?>
 </body>
 </html>
