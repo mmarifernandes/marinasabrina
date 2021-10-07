@@ -44,56 +44,50 @@
 </style>
 
 <body>
-    <table id="table">
-        
-        
-        <tr id="a">
-            <form id="form1" name="form1" action="romanos.php" method="post">
+    
+    
+    <form id="form1" name="form1" action="romanos.php" method="post">
+        <table id="table">
+            <tr id="adicionarcells">
             <td></td>
                 <td>
-                   
-<<<<<<< HEAD
-                    <input type="text" id="valor" name="romano1" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
-=======
-                    <input type="text" id="valor" name="valor1" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
->>>>>>> 3bea4f7daa1e47906d661d896f4845297526e1c6
+                    <input type="text" id="valor1" name="valor1" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
                     <select id="operador1" name="operador1">
                         <option value="value1" selected>+</option>
                         <option value="value2">-</option>
                         <option value="value3">*</option>
-                        <option value="value3">/</option>
+                        <option value="value4">/</option>
                     </select>
-<<<<<<< HEAD
-                    <input type="text" id="valor" name="romano2" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
-                <td id="a"></td>
-=======
-                    <input type="text" id="valor" name="valor2" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
+                </td>
+                <td>
+                    <input type="text" id="valor2" name="valor2" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
+                </td>
                 <td></td>
->>>>>>> 3bea4f7daa1e47906d661d896f4845297526e1c6
                 <td>
                     <input type="button" id="adiciona" value="+" style="width: 20px;" onclick="myFunction();">
                     <input type="submit" value="=" style="width: 20px;">
                 </td>
-                </td>
-            </form>
             </tr>
-
         </table>
+    </form>
+        
         <!-- <button type="button" id="button1" onclick="valida();">Enviar</button> -->
-    <div id="mensagem" align="center"
-        style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
+    <!-- <div id="mensagem" align="center"
+        style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div> -->
 </body>
 <script>
  
-
+    
+    var i = 2;
     function myFunction() {
         var table = document.getElementById("table");
         var rowCount = table.rows[0].cells.length;
-        var row = document.getElementById("a");
-        var x = row.insertCell(1);
+        var row = document.getElementById("adicionarcells");
+        var x = row.insertCell(-1);
+        i++
         console.log(rowCount);
-        x.innerHTML = " <input type='text' id='valor' name='valor1' pattern='(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)' required><select id='operador1' name='operador1'><option value = 'value1' selected > +</option ><option value='value2'>-</option><option value='value3'>*</option><option value='value3'>/</option></select >";
-            if (rowCount == 11) {
+        x.innerHTML = "<input type=\"text\" id=\"valor" + i + "\" name=\"valor" + i + "\" pattern=\"(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)\" required><select id=\"operador" + i +"\" name=\"operador" + i + "\"><option value =\"value1\" selected >+</option ><option value =\"value2\">-</option><option value =\"value3\">*</option><option value =\"value4\">/</option></select>";
+            if (rowCount == 12) {
             document.getElementById("adiciona").disabled = true;
         }
 

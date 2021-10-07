@@ -3,13 +3,12 @@
 <?php
 var_dump($_POST);
 echo "<br>";
-print_r($_POST);
-echo "<br>";
 echo "<br>";
 # '/^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/' pattern
-$romano2 = $_POST['romano2'];
+$valor1 = $_POST['valor1'];
+echo $valor1;
 
-function converte($result) {
+function converte($valor1) {
     $romanos = array(
         'M' => 1000,
         'CM' => 900,
@@ -26,20 +25,21 @@ function converte($result) {
         'I' => 1
     );
     $result = 0;
-	$romano = $_POST['romano1'];
+
 
 foreach ($romanos as $key => $valor) {
-    while (strpos($romano, $key) === 0) {
+    while (strpos($valor1, $key) === 0) {
         $result += $valor;
-        $romano = substr($romano, strlen($key));
+        $valor1 = substr($valor1, strlen($key));
     }
 }
 	return $result;
 }
-echo $result;
+$valor1 = converte($valor1);
+for ($i = 0; $i<=10; $i++){
+    echo $_POST["valor".$i] . ' | ';
 
-
-
+}
 
 ?>
 </body>

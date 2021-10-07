@@ -10,13 +10,13 @@
 
 // back-end PHP
 // mostra uma mensagem de erro se o valor monetário for inválido
-// só deve transcrever e mostrar o valor por extenso se o valor monetário for válido
+// só deve transcrever e mostrar o valor por exdezenaso se o valor monetário for válido
 
 var_dump($_POST);
 $num = $_POST['valor'];
 function numberTopalavras($num)
 { 
-$ones = array( 
+$numeros = array( 
 1 => "um", 
 2 => "dois", 
 3 => "tres", 
@@ -35,9 +35,8 @@ $ones = array(
 16 => "dezesseis", 
 17 => "dezessete", 
 18 => "dezoito", 
-19 => "dezenove" 
-); 
-$tens = array( 
+19 => "dezenove"); 
+$dezenas = array( 
 1 => "dez",
 2 => "vinte", 
 3 => "trinta", 
@@ -49,7 +48,7 @@ $tens = array(
 9 => "noventa" 
 ); 
 $centenas = array("", "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
-$hundreds = array("hundred", "mil", "milhão", "bilhão");
+$singular = array("", "mil", "milhão", "bilhão");
 $plural = array("","mil","milhões","bilhões");
 
 
@@ -73,18 +72,18 @@ foreach ($whole_arr as $key => $i) {
         continue;
     }
     if ($i < 20) {
-        $palavras.= $ones[($i) ];
-        $unidade.= $ones[($i) ];
+        $palavras.= $numeros[($i) ];
+        $unidade.= $numeros[($i) ];
     } elseif ($i < 100) {
         if (substr($i, 0, 1) == 0 && strlen($i) == 3) {
-            $palavras.= $tens[substr($i, 1, 1) ] . " e ";
+            $palavras.= $dezenas[substr($i, 1, 1) ] . " e ";
             if (substr($i, 2, 1) != 0) {
-                $palavras.= " " . $ones[substr($i, 2, 1) ];
+                $palavras.= " " . $numeros[substr($i, 2, 1) ];
             }
         } else {
-            $palavras.= $tens[substr($i, 0, 1) ];
+            $palavras.= $dezenas[substr($i, 0, 1) ];
             if (substr($i, 1, 1) != 0) {
-                $palavras.= " e " . $ones[substr($i, 1, 1) ];
+                $palavras.= " e " . $numeros[substr($i, 1, 1) ];
             }
         }
         
@@ -96,13 +95,13 @@ foreach ($whole_arr as $key => $i) {
             $palavras.= $centenas[(substr($i, 0, 1)) ];
         }
         if (substr($i, 1, 2) < 20 && substr($i, 1, 1) != 0) {
-            $palavras.= " " . $ones[(substr($i, 1, 2)) ];
+            $palavras.= " " . $numeros[(substr($i, 1, 2)) ];
         } else {
             if (substr($i, 1, 1) != 0) {
-                $palavras.= " " . $tens[substr($i, 1, 1) ];
+                $palavras.= " " . $dezenas[substr($i, 1, 1) ];
             }
             if (substr($i, 2, 1) != 0) {
-                $palavras.= " " . $ones[substr($i, 2, 1) ];
+                $palavras.= " " . $numeros[substr($i, 2, 1) ];
             }
         }
         }
@@ -116,19 +115,19 @@ foreach ($whole_arr as $key => $i) {
             $palavras.= $centenas[(substr($i, 0, 1)) ];
         }
         if (substr($i, 1, 2) < 20 && substr($i, 1, 1) != 0) {
-            $palavras.= " " . $ones[(substr($i, 1, 2)) ];
+            $palavras.= " " . $numeros[(substr($i, 1, 2)) ];
         } else {
             if (substr($i, 1, 1) != 0) {
-                $palavras.= " " . $tens[substr($i, 1, 1) ];
+                $palavras.= " " . $dezenas[substr($i, 1, 1) ];
             }
             if (substr($i, 2, 1) != 0) {
-                $palavras.= " e " . $ones[substr($i, 2, 1) ];
+                $palavras.= " e " . $numeros[substr($i, 2, 1) ];
             }
         }
     }
     if ($key > 0) {
         if(substr($i, 0, 1) == 1 && strlen($num) == 12){
-            $palavras.= " " . $hundreds[$key] . ", ";
+            $palavras.= " " . $singular[$key] . ", ";
         }
       else
         $palavras.= " " . $plural[$key] . " ";
@@ -138,32 +137,35 @@ $palavras.= ' reais';
 echo $todonumero;
 if ($centavos > 0) {//arrumar
     if($todonumero != 0){
-    $palavras.= " e ";
-    if ($centavos < 20 && $centavos != 10) {
-        $palavras.= $ones[($centavos) ];
-    }
-    if (substr($centavos, 0, 1) === 0) {
-        $palavras.= $ones[substr($centavos, 1, 1) ];
-        echo 'aaa';
-    } elseif ($centavos < 100) {
-        $palavras.=  $tens[substr($centavos, 0, 1) ] . ' ';
+        $palavras.= " e ";
+        echo '<br>';
+        if ($centavos < 20 && $centavos != 10 && substr($centavos, 0, 1) != 0) {
+            $palavras.= $numeros[($centavos) ];
+        }
+        if (substr($centavos, 0, 1) == 0) {
+            echo substr($centavos, 0, 1);
+        $palavras.= $numeros[substr($centavos, 1, 1) ];
+
+    } if ($centavos >= 20 && $centavos < 100) {
+        $palavras.=  $dezenas[substr($centavos, 0, 1) ] . ' ';
         if (substr($centavos, 1, 1) != 0) {
-            $palavras.= " " . $ones[substr($centavos, 1, 1) ];
+            echo  $numeros[substr($centavos, 1, 1) ];
+            $palavras.= " " . $numeros[substr($centavos, 1, 1) ];
         }
     }
     $palavras.= ' centavos';
 }else{
     $palavras = " ";
     if ($centavos < 20 && $centavos != 10) {
-        $palavras.= $ones[($centavos) ];
+        $palavras.= $numeros[($centavos) ];
     }
-    if (substr($centavos, 0, 1) === 0) {
-        $palavras.= $ones[substr($centavos, 1, 1) ];
+    elseif (substr($centavos, 0, 1) === 0) {
+        $palavras.= $numeros[substr($centavos, 1, 1) ];
         echo 'aaa';
     } elseif ($centavos < 100) {
-        $palavras.=  $tens[substr($centavos, 0, 1) ] . ' ';
+        $palavras.=  $dezenas[substr($centavos, 0, 1) ] . ' ';
         if (substr($centavos, 1, 1) != 0) {
-            $palavras.= " " . $ones[substr($centavos, 1, 1) ];
+            $palavras.= " " . $numeros[substr($centavos, 1, 1) ];
         }
     }
     $palavras.= ' centavos';
@@ -172,8 +174,8 @@ if ($centavos > 0) {//arrumar
 return $palavras;
 }
 
-echo "<p align='center' style='color:blue'>".numberTopalavras("$num")."</p>";
-// function extenso($valor){
+echo "<h1 align='center'>".numberTopalavras("$num")."</h1>";
+// function exdezenaso($valor){
 // if (strpos($valor,",") > 0)
 // {
 //     $valor = str_replace(",",".",$valor);
@@ -228,7 +230,7 @@ echo "<p align='center' style='color:blue'>".numberTopalavras("$num")."</p>";
 // if (isset($_POST["valor"]) && $valor <= 999999999.99 ) {
 // echo "<br>";
 // echo "<br>";
-// echo extenso($valor);
+// echo exdezenaso($valor);
 // }
 ?>
 </body>
