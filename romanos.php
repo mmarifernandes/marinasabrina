@@ -5,11 +5,11 @@ var_dump($_POST);
 echo "<br>";
 echo "<br>";
 # '/^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/' pattern
-$romano1 = $_POST["1"];
-$romano2 = $_POST['2'];
 
 
-function converte($romano1) {
+function converte($key) {
+    $romano1 = $_POST["1"];
+    $romano2 = $_POST['2'];
     $romanos = array(
         'M' => 1000,
         'CM' => 900,
@@ -27,11 +27,11 @@ function converte($romano1) {
     );
     $result = 0;
 
-
+$romano = intval($key);
 foreach ($romanos as $key => $valor) {
     while (strpos($romano1, $key) === 0) {
         $result += $valor;
-        $romano1= substr($romano1, strlen($key));
+        $romano1 = substr($romano1, strlen($key));
     }
 }
 	return $result;
@@ -44,16 +44,16 @@ for ($i = 10; $i>0; $i--){
     echo  converte($_POST[$i]); // mostra todos os valores
     echo '<br>';
     if($_POST['operador'.$i] == '+'){
-    echo $total = converte($_POST[$i]) + converte($_POST[$i-1]);
+    echo $total =  converte($_POST[$i]) + converte($_POST[$i-1]);
     }
         if($_POST['operador'.$i] == '-'){
-    echo $total = converte($_POST[$i]) - converte($_POST[$i-1]);
+    echo $total = converte( $_POST[$i]) -  converte( $_POST[$i-1]);
     }
             if($_POST['operador'.$i] == '*'){
-    echo $total = converte($_POST[$i]) * converte($_POST[$i-1]);
+    echo $total =  converte( $_POST[$i]) *  converte($_POST[$i-1]);
     }
             if($_POST['operador'.$i] == '/'){
-    echo $total = converte($_POST[$i]) / converte($_POST[$i-1]);
+    echo $total =  converte( $_POST[$i]) / converte($_POST[$i-1]);
     }
     echo '<br>';
     echo $_POST['operador'.$i];

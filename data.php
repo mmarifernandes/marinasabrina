@@ -1,18 +1,6 @@
 <html>
 <body>
 <?php
-/* $data = 2020-08-08;
-$qtdDias = 5;
-
-O cálculo com as funções vai ficar da seguinte maneira:
-
-$resultado = date('d/m/Y', strtotime("+{$qtdDias} days",strtotime($data)));*/
-/* mostra uma mensagem de erro se data ou dias úteis forem inválidos
-só calcula se data e dias úteis forem válidos
-soma a quantidade de dias úteis à data e mostra a data resultante
-* dias úteis são os dias da semana de segunda a sexta que não são feriados nacionais
-(Confraternização Universal, Tiradentes, Dia Mundial do Trabalho,
-Independência do Brasil, Nossa Senhora Aparecida, Finados, Proclamação da República e Natal) */
 echo "<b>POST</b>";
 echo "<pre>";
 var_dump($_POST);
@@ -40,7 +28,6 @@ function diasUteis($data, $dias) {
     $data = $_POST["data"];
     $dias = $_POST["dias"];
     $a = explode("/", $data);
-    $ano = strtotime($a[2]);
     $dia = 86400;
     $datas = array();
     $datas["pascoa"] = easter_date($a[2]);
@@ -69,24 +56,21 @@ function diasUteis($data, $dias) {
     }
     $array = explode("-", $data);
     $c = 0;
-    while ($c < $dias) {
+    $qtd = 0;
+    while ($qtd < $dias) {
         $c++;
         $diaa = date("m-d", strtotime("+".$c."day", strtotime($data)));
         echo $diaa;
         echo '<br>';
         $diasemana = date("w", strtotime("+".$c."day", mktime(0, 0, 0, $array[1], $array[2], $array[0])));
-        echo $c;
+        echo $diasemana;
         if ($diasemana != "0" && $diasemana != "6" && !in_array($diaa, $feriados)) {
-           continue;
-        }else{
-            $c++;
-        }
+           $qtd++; }
         echo $diasemana;
     }
     return date("d/m/Y", strtotime("+".$c."day", strtotime($data)));
 }
 }
-
 
 
 echo "<h1 align='center'>".diasUteis($data, $dias)."</h1>";

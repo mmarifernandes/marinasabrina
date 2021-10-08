@@ -10,9 +10,6 @@ echo "<hr>";
 
 function validaCPF($cpf) {
 
-    /* O CPF tem a configuração XXX.XXX.XXX-XX, onde os primeiros oito dígitos são o número-base, o nono define a Região Fiscal (v. abaixo), o penúltimo é o DV módulo 11 (v. abaixo) dos nove dígitos anteriores e o último dígito é o DV módulo 11 dos dez dígitos anteriores. */
-    /* No caso do CPF, o DV módulo 11 corresponde ao resto da divisão por 11 do somatório da multiplicação de cada algarismo da base respectivamente por 9, 8, 7, 6, 5, 4, 3, 2, 1 e 0, a partir da unidade. O resto 10 é considerado 0. */
-
     $cpf = str_replace("-", "", $_POST['cpf']);
 
     if (!isset($cpf)) { return false; }
