@@ -23,7 +23,7 @@ function validaCPF($cpf) {
 
     if (is_numeric($cpf) == false) { return false; }
 
-    for ($i = 9; $i < 11; $i++) { // Aqui ele pega os dois digitos (pos 9,10) 1 2 3 4 5 6 7 8 9 10 11 -- 0 5 4  1 9 9  4 4 0  9 0
+    for ($i = 9; $i < 11; $i++) { 
         for ($d = 0, $c = 0; $c < $i; $c++) { // c = 0 1 2 3 4 5 6 7 8 9 numero base
             $d += $cpf[$c] * (($i + 1) - $c); } // d soma cpf na pos c e multiplica pelas duas ultimas pos, diminui base
         $d = ((10 * $d) % 11) % 10; /// verifica se os 2 ultimos batem c o calculo
