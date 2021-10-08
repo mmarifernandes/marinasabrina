@@ -43,9 +43,11 @@ function diasUteis($data, $dias) {
     $ano = strtotime($a[2]);
     $dia = 86400;
     $datas = array();
-    $datas["pascoa"] = easter_date($ano);
+    $datas["pascoa"] = easter_date($a[2]);
     $datas["sextasanta"] = $datas["pascoa"] - (2 * $dia);
     $datas["carnaval"] = $datas["pascoa"] - (47 * $dia);
+    echo date("m-d", $datas["carnaval"]);
+    echo '<br>';
     $datas["corpuschristi"] = $datas["pascoa"] + (60 * $dia);
     $feriados = array(
         "01-01", 
@@ -67,13 +69,19 @@ function diasUteis($data, $dias) {
     }
     $array = explode("-", $data);
     $c = 0;
-    $qtd = 0;
-    while ($qtd < $dias) {
+    while ($c < $dias) {
         $c++;
         $diaa = date("m-d", strtotime("+".$c."day", strtotime($data)));
-        if (($diasemana = date("w", strtotime("+".$c."day", mktime(0, 0, 0, $array[1], $array[2], $array[0])))) != "0" && $diasemana != "6" && !in_array($diaa, $feriados)) {
-            $qtd++;
+        echo $diaa;
+        echo '<br>';
+        $diasemana = date("w", strtotime("+".$c."day", mktime(0, 0, 0, $array[1], $array[2], $array[0])));
+        echo $c;
+        if ($diasemana != "0" && $diasemana != "6" && !in_array($diaa, $feriados)) {
+           continue;
+        }else{
+            $c++;
         }
+        echo $diasemana;
     }
     return date("d/m/Y", strtotime("+".$c."day", strtotime($data)));
 }
@@ -81,7 +89,7 @@ function diasUteis($data, $dias) {
 
 
 
-echo diasUteis($data, $dias);
+echo "<h1 align='center'>".diasUteis($data, $dias)."</h1>";
 //print_r(feriadosMoveis($data));
 ?>
 </body>
