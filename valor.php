@@ -60,65 +60,83 @@ echo $num;
 $numseparado = explode(".", $num);
 $todonumero = $numseparado[0];
 $centavos = $numseparado[1];
-echo substr($centavos, 0, 1);
-echo '<br>';
-echo strlen($num);
+// echo substr($centavos, 0, 1);
+// echo strlen($num);
 $whole_arr = array_reverse(explode(",", $todonumero));
 krsort($whole_arr);
 $palavras = "";
 foreach ($whole_arr as $key => $i) {
+    // echo '<br>';
+    // echo substr($i, 2, 1);
+    // echo '<br>';
     if ($i == 0) {
-        $palavras = '';
         continue;
     }
     if ($i < 20) {
-        $palavras.= $numeros[($i) ];
-        $unidade.= $numeros[($i) ];
-    } elseif ($i < 100) {
-        if (substr($i, 0, 1) == 0 && strlen($i) == 3) {
-            $palavras.= $dezenas[substr($i, 1, 1) ] . " e ";
+        if(strlen($i) == 3 && substr($i, 0, 2) == 00){
+            $palavras.= $numeros[substr($i, 2, 3) ];
+            echo substr($i, 2, 3);
+        }else{
+            $palavras.= $numeros[$i ];
+            $unidades.= $numeros[($i) ];
+        }
+        // echo '<br>';
+        // echo  substr($i, 0, 2);
+        // echo '<br>';
+        // echo $palavras;
+
+    // }elseif(substr($i, 0, 1)) 
+    
+      }  elseif ($i < 100) {
+          if (substr($i, 0, 1) == 0 && strlen($i) == 3) {
+              $palavras.= $dezenas[substr($i, 1, 1) ];
+            } 
             if (substr($i, 2, 1) != 0) {
-                $palavras.= " " . $numeros[substr($i, 2, 1) ];
+                $palavras.= " e " . $numeros[substr($i, 2, 1) ];
             }
-        } else {
-            $palavras.= $dezenas[substr($i, 0, 1) ];
-            if (substr($i, 1, 1) != 0) {
-                $palavras.= " e " . $numeros[substr($i, 1, 1) ];
+         else {
+             $palavras.= $dezenas[substr($i, 0, 1) ];
+             if (substr($i, 1, 1) != 0) {
+                 $palavras.= " e " . $numeros[substr($i, 1, 1) ];
+                }
+            }
+            
+        } 
+        elseif($i > 100 && $i <200){
+            if (substr($i, 1, 1) != 0 || substr($i, 2, 1) != 0) {
+                $palavras.= 'cento' . ' e ';
+            } else {
+                $palavras.= $centenas[(substr($i, 0, 1)) ];
+            }
+            if (substr($i, 1, 2) < 20 && substr($i, 1, 1) != 0) {
+               
+                $palavras.= " e " . $numeros[(substr($i, 1, 2)) ];
+            } else {
+                
+                if (substr($i, 1, 1) != 0) {
+                    // echo substr($i, 1, 1);
+                    // echo '<br>';
+                    $palavras.= " " . $dezenas[substr($i, 1, 1) ];
+                }
+                if (substr($i, 2, 1) != 0) {
+                    
+                $palavras.= " e " . $numeros[substr($i, 2, 1) ];
             }
         }
-        
-    } 
-      elseif($i > 100 && $i <200){
-             if (substr($i, 1, 1) != 0 || substr($i, 2, 1) != 0) {
-            $palavras.= 'cento' . ' e ';
-        } else {
-            $palavras.= $centenas[(substr($i, 0, 1)) ];
-        }
-        if (substr($i, 1, 2) < 20 && substr($i, 1, 1) != 0) {
-            $palavras.= " " . $numeros[(substr($i, 1, 2)) ];
-        } else {
-            if (substr($i, 1, 1) != 0) {
-                $palavras.= " " . $dezenas[substr($i, 1, 1) ];
-            }
-            if (substr($i, 2, 1) != 0) {
-                $palavras.= " " . $numeros[substr($i, 2, 1) ];
-            }
-        }
-        }
+    }
     
     
     else {
-        
         if (substr($i, 1, 1) != 0 || substr($i, 2, 1) != 0) {
-            $palavras.= $centenas[(substr($i, 0, 1)) ] . ' e ';
+            $palavras.= $centenas[(substr($i, 0, 1)) ];
         } else {
             $palavras.= $centenas[(substr($i, 0, 1)) ];
         }
         if (substr($i, 1, 2) < 20 && substr($i, 1, 1) != 0) {
-            $palavras.= " " . $numeros[(substr($i, 1, 2)) ];
+            $palavras.= " e " . $numeros[(substr($i, 1, 2)) ];
         } else {
             if (substr($i, 1, 1) != 0) {
-                $palavras.= " " . $dezenas[substr($i, 1, 1) ];
+                $palavras.= " e " . $dezenas[substr($i, 1, 1) ];
             }
             if (substr($i, 2, 1) != 0) {
                 $palavras.= " e " . $numeros[substr($i, 2, 1) ];
@@ -127,14 +145,14 @@ foreach ($whole_arr as $key => $i) {
     }
     if ($key > 0) {
         if(substr($i, 0, 1) == 1 && strlen($num) == 12){
-            $palavras.= " " . $singular[$key] . ", ";
+            $palavras.= " " . $singular[$key] . " e ";
         }
-      else
-        $palavras.= " " . $plural[$key] . " ";
+        else
+        $palavras.= " " . $plural[$key] . "  ";
+
     }
 }
 $palavras.= ' reais';
-echo $todonumero;
 if ($centavos > 0) {//arrumar
     if($todonumero != 0){
         $palavras.= " e ";
@@ -143,14 +161,14 @@ if ($centavos > 0) {//arrumar
             $palavras.= $numeros[($centavos) ];
         }
         if (substr($centavos, 0, 1) == 0) {
-            echo substr($centavos, 0, 1);
+            // echo substr($centavos, 0, 1);
         $palavras.= $numeros[substr($centavos, 1, 1) ];
 
     } if ($centavos >= 20 && $centavos < 100) {
         $palavras.=  $dezenas[substr($centavos, 0, 1) ] . ' ';
         if (substr($centavos, 1, 1) != 0) {
-            echo  $numeros[substr($centavos, 1, 1) ];
-            $palavras.= " " . $numeros[substr($centavos, 1, 1) ];
+            // echo  $numeros[substr($centavos, 1, 1) ];
+            $palavras.= " e " . $numeros[substr($centavos, 1, 1) ];
         }
     }
     $palavras.= ' centavos';
@@ -159,13 +177,14 @@ if ($centavos > 0) {//arrumar
     if ($centavos < 20 && $centavos != 10) {
         $palavras.= $numeros[($centavos) ];
     }
-    elseif (substr($centavos, 0, 1) === 0) {
+    if (substr($centavos, 0, 1) === 0) {
         $palavras.= $numeros[substr($centavos, 1, 1) ];
         echo 'aaa';
     } elseif ($centavos < 100) {
         $palavras.=  $dezenas[substr($centavos, 0, 1) ] . ' ';
         if (substr($centavos, 1, 1) != 0) {
-            $palavras.= " " . $numeros[substr($centavos, 1, 1) ];
+            echo $palavras;
+            $palavras.=  $numeros[substr($centavos, 1, 1) ];
         }
     }
     $palavras.= ' centavos';
@@ -174,7 +193,11 @@ if ($centavos > 0) {//arrumar
 return $palavras;
 }
 
-echo "<h1 align='center'>".numberTopalavras("$num")."</h1>";
+// echo "<h1 align='center'>".numberTopalavras("$num")."</h1>";
+
+for ($num = 0.01; $num < 1000000000; $num += 0.01){
+    echo numberTopalavras($num);
+}
 // function exdezenaso($valor){
 // if (strpos($valor,",") > 0)
 // {
