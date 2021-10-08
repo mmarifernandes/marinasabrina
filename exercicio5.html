@@ -51,7 +51,7 @@
             <tr id="adicionarcells">
             <td></td>
                 <td>
-                    <input type="text" id="valor2" name="2" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
+                    <input type="text" id="valor1" name="2" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
                     <select id="operador1" name="operador1">
                         <option value="+" selected>+</option>
                         <option value="-">-</option>
@@ -60,14 +60,16 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" id="valor1" name="1" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
+                    <input type="text" id="valor2" name="1" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
                 </td>
                 <td></td>
-                <td>
-                    <input type="button" id="adiciona" value="+" style="width: 20px;" onclick="myFunction();">
-                    <input type="submit" value="=" style="width: 20px;">
-                </td>
-            </tr>
+                            </tr>
+                                <tr>
+                                    <td>
+                                    <input type="button" id="adiciona" value="+" style="width: 20px;" onclick="myFunction();">
+                                    <input type="submit" value="=" style="width: 20px;">
+                                    </td>
+                                </tr>
         </table>
     </form>
         
@@ -84,11 +86,11 @@
         var table = document.getElementById("table");
         var rowCount = table.rows[0].cells.length;
         var row = document.getElementById("adicionarcells");
-        var x = row.insertCell(0);
-        i++;
+        var x = row.insertCell(-1);
         e++;
+        i++;
         console.log(rowCount);
-        x.innerHTML = "<input type=\"text\" id=\"valor" + i + "\" name=\"" + i + "\" pattern=\"(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)\" required><select id=\"operador" + e +"\" name=\"operador" + e + "\"><option value =\"value1\" selected >+</option ><option value =\"value2\">-</option><option value =\"value3\">*</option><option value =\"value4\">/</option></select>";
+        x.innerHTML = "<select id=\"operador" + e + "\" name=\"operador" + e + "\"><option value =\"+\" selected >+</option ><option value =\"-\">-</option><option value =\"*\">*</option><option value =\"/\">/</option></select><input type=\"text\" id=\"valor" + i + "\" name=\"" + i + "\" pattern=\"(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)\" required>";
             if (rowCount == 12) {
             document.getElementById("adiciona").disabled = true;
         }
