@@ -1,9 +1,10 @@
 <html>
 <style>
-    body{
+    body {
         margin-left: 50px;
         margin-right: 100px;
     }
+
     input {
         box-shadow: none;
         border: 1px solid lightgray;
@@ -31,27 +32,29 @@
         margin-left: 5;
         margin-right: 5;
     }
-    tr{
+
+    tr {
         display: flex;
         align-items: top;
         flex-wrap: wrap;
     }
-    form{
+
+    form {
         display: flex;
         flex-direction: column;
     }
-
 </style>
 
 <body>
-    
-    
+
+
     <form id="form1" name="form1" action="romanos.php" method="post">
         <table id="table">
             <tr id="adicionarcells">
-            <td></td>
+
                 <td>
-                    <input type="text" id="valor1" name="2" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
+                    <input type="text" id="valor1" name="1"
+                        pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
                     <select id="operador1" name="operador1">
                         <option value="+" selected>+</option>
                         <option value="-">-</option>
@@ -60,39 +63,40 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" id="valor2" name="1" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
+                    <input type="text" id="valor2" name="2"
+                        pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
                 </td>
-                <td></td>
-                            </tr>
-                                <tr>
-                                    <td>
-                                    <input type="button" id="adiciona" value="+" style="width: 20px;" onclick="myFunction();">
-                                    <input type="submit" value="=" style="width: 20px;">
-                                    </td>
-                                </tr>
+
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" id="adiciona" value="+" style="width: 20px;" onclick="myFunction();">
+                    <input type="submit" value="=" style="width: 20px;">
+                </td>
+            </tr>
         </table>
     </form>
-        
-        <!-- <button type="button" id="button1" onclick="valida();">Enviar</button> -->
+
+    <!-- <button type="button" id="button1" onclick="valida();">Enviar</button> -->
     <!-- <div id="mensagem" align="center"
         style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div> -->
 </body>
 <script>
- 
-    
+
+
     var i = 2;
     var e = 1;
     function myFunction() {
-        var table = document.getElementById("table");
+        var table = document.querySelector("#table");
         var rowCount = table.rows[0].cells.length;
-        var row = document.getElementById("adicionarcells");
+        var row = document.querySelector("#adicionarcells");
         var x = row.insertCell(-1);
         e++;
         i++;
         console.log(rowCount);
         x.innerHTML = "<select id=\"operador" + e + "\" name=\"operador" + e + "\"><option value =\"+\" selected >+</option ><option value =\"-\">-</option><option value =\"*\">*</option><option value =\"/\">/</option></select><input type=\"text\" id=\"valor" + i + "\" name=\"" + i + "\" pattern=\"(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)\" required>";
-            if (rowCount == 12) {
-            document.getElementById("adiciona").disabled = true;
+        if (rowCount == 9) {
+            document.querySelector("#adiciona").disabled = true;
         }
 
     }
