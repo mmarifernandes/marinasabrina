@@ -30,12 +30,12 @@
             <tr>
                 <td>CPF</td>
                 <td>
-                <input type="text" id="cpf" name="cpf" placeholder="999999999-99" maxlength="12" required pattern="^[0-9]{9}-[0-9]{2}$" />
+                <input type="text" id="cpf" name="cpf" placeholder="999999999-99" maxlength="12" required  pattern="^[0-9]{9}-[0-9]{2}$" />
                 </td>
             <tr>
                 <td></td>
                 <td>
-                    <button type="submit" name="botao1">Enviar</button>
+                    <button type="submit" name="botao1" onclick="valida()">Enviar</button>
 
                 </td>
             </tr>
@@ -58,8 +58,8 @@
 		}
 function valida() {
 			var id = "cpf";
-			for (var id of ids) {
-				var input = document.getElementById(id);
+			var input = document.getElementById(id);
+            var aa = (input.value).replace("-", "");
 				if (!input.disabled) {
 					var regexp = new RegExp(input.pattern);
 					if (!regexp.test(input.value)) {
@@ -69,7 +69,21 @@ function valida() {
 						return;
 					}
 				}
-			}
+                if (aa == "00000000000" ||
+            aa == "11111111111" ||
+            aa == "22222222222" ||
+            aa == "33333333333" ||
+            aa == "44444444444" ||
+            aa == "55555555555" ||
+            aa == "66666666666" ||
+            aa == "77777777777" ||
+            aa == "88888888888" ||
+            aa == "99999999999") {
+                mensagem("red", "ERRO");
+						input.value = "";
+						input.focus();
+						return;
+                }
 			mensagem("green", "OK");
 			document.getElementById("form1").submit();
 		}
