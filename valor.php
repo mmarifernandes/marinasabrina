@@ -19,7 +19,7 @@ function numberTopalavras($num)
 $numeros = array( 
 1 => "um", 
 2 => "dois", 
-3 => "tres", 
+3 => "três", 
 4 => "quatro", 
 5 => "cinco", 
 6 => "seis", 
@@ -47,9 +47,9 @@ $dezenas = array(
 8 => "oitenta", 
 9 => "noventa" 
 ); 
-$centenas = array("", "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
-$singular = array("", "mil", "milhão", "bilhão");
-$plural = array("","mil","milhões","bilhões");
+$centenas = array("", 1 =>"cem", 2=> "duzentos", 3=>"trezentos", 4=>"quatrocentos", 5=>"quinhentos", 6=>"seiscentos", 7=>"setecentos", 8=>"oitocentos", 9=>"novecentos");
+$singular = array("", 1=>"mil", 2=>"milhão", 3=>"bilhão");
+$plural = array("",1=>"mil",2=>"milhões",3=>"bilhões");
 
 
 
@@ -61,7 +61,8 @@ $numseparado = explode(".", $num);
 $todonumero = $numseparado[0];
 $centavos = $numseparado[1];
 // echo substr($centavos, 0, 1);
-// echo strlen($num);
+// echo '<br>';
+// echo strlen($centavos);
 $whole_arr = array_reverse(explode(",", $todonumero));
 krsort($whole_arr);
 $palavras = "";
@@ -152,12 +153,20 @@ foreach ($whole_arr as $key => $i) {
 
     }
 }
+
+    if ( strstr( $palavras, 'um' ) && strlen($num) <= 4) {
+$palavras.= ' real';
+} else {
 $palavras.= ' reais';
+}
 if ($centavos > 0) {//arrumar
     if($todonumero != 0){
         $palavras.= " e ";
         echo '<br>';
         if ($centavos < 20 && $centavos != 10 && substr($centavos, 0, 1) != 0) {
+            $palavras.= $numeros[($centavos) ];
+        }
+        if ($centavos == 10) {
             $palavras.= $numeros[($centavos) ];
         }
         if (substr($centavos, 0, 1) == 0) {
@@ -171,7 +180,9 @@ if ($centavos > 0) {//arrumar
             $palavras.= " e " . $numeros[substr($centavos, 1, 1) ];
         }
     }
-    $palavras.= ' centavos';
+
+$palavras.= ' centavos';
+
 }else{
     $palavras = " ";
     if ($centavos < 20 && $centavos != 10) {
@@ -179,7 +190,6 @@ if ($centavos > 0) {//arrumar
     }
     if (substr($centavos, 0, 1) === 0) {
         $palavras.= $numeros[substr($centavos, 1, 1) ];
-        echo 'aaa';
     } elseif ($centavos < 100) {
         $palavras.=  $dezenas[substr($centavos, 0, 1) ] . ' ';
         if (substr($centavos, 1, 1) != 0) {
@@ -187,74 +197,18 @@ if ($centavos > 0) {//arrumar
             $palavras.=  $numeros[substr($centavos, 1, 1) ];
         }
     }
-    $palavras.= ' centavos';
+        if ( strstr( $palavras, 'um' ) && strlen($centavos) <= 4) {
+  $palavras.= ' centavo';
+} else {
+$palavras.= ' centavos';
+}
 }
 }
 return $palavras;
 }
 
-// echo "<h1 align='center'>".numberTopalavras("$num")."</h1>";
+echo "<h1 align='center'>".numberTopalavras("$num")."</h1>";
 
-for ($num = 0.01; $num < 1000000000; $num += 0.01){
-    echo numberTopalavras($num);
-}
-// function exdezenaso($valor){
-// if (strpos($valor,",") > 0)
-// {
-//     $valor = str_replace(",",".",$valor);
-// };
-
-// $singular = array("centavo", "real", "mil", "milhão", "bilhão", "trilhão", "quatrilhão");
-// $plural = array("centavos", "reais", "mil", "milhões", "bilhões", "trilhões","quatrilhões");
-
-// $centenas = array("", "cem", "duzentos", "trezentos", "quatrocentos",
-// "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
-// $dezenas = array("", "dez", "vinte", "trinta", "quarenta", "cinquenta",
-// "sessenta", "setenta", "oitenta", "noventa");
-// $dezenas2 = array("dez", "onze", "doze", "treze", "quatorze", "quinze",
-// "dezesseis", "dezesete", "dezoito", "dezenove");
-
-
-// $unidades = array("", "um", "dois", "três", "quatro", "cinco", "seis","sete", "oito", "nove");
-
-// $x=0;
-
-// $valor = number_format($valor, 2, ".", ".");
-// $inteiro = explode(".", $valor);
-// for($i=0; $i<count($inteiro); $i++)
-// for($y=strlen($inteiro[$i]);$y<3;$y++)
-// $inteiro[$i] = "0".$inteiro[$i];
-
-// $fim = count($inteiro) - ($inteiro[count($inteiro)-1] > 0 ? 1 : 2);
-// for ($i=0;$i<count($inteiro);$i++) {
-// $valor = $inteiro[$i];
-// $calculocentenas = (($valor > 100) && ($valor < 200)) ? "cento" : $centenas[$valor[0]];
-// $calculodezenas = ($valor[1] < 2) ? "" : $dezenas[$valor[1]];
-// $calculounidades = ($valor > 0) ? (($valor[1] == 1) ? $dezenas2[$valor[2]] : $unidades[$valor[2]]) : "";
-
-// $r = $calculocentenas.(($calculocentenas && ($calculodezenas || $calculounidades)) ? " e " : "").$calculodezenas.(($calculodezenas &&
-// $calculounidades) ? " e " : "").$calculounidades;
-// $t = count($inteiro)-1-$i;
-// $r .= $r ? " ".($valor > 1 ? $plural[$t] : $singular[$t]) : "";
-// if ($valor == "000")$x++; elseif ($x > 0) $x--;
-// if (($t==1) && ($x>0) && ($inteiro[0] > 0)) $r .= (($x>1) ? " de " : "").$plural[$t];
-// if ($r) $rt = $rt . ((($i > 0) && ($i <= $fim) &&
-// ($inteiro[0] > 0) && ($x < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
-// }
-
-
-// return($rt ? $rt : "ERRO");
-
-// }
-// if ($valor > 999999999.99){
-//     echo "ERRO";
-// }
-
-// if (isset($_POST["valor"]) && $valor <= 999999999.99 ) {
-// echo "<br>";
-// echo "<br>";
-// echo exdezenaso($valor);
-// }
 ?>
 </body>
 </html>

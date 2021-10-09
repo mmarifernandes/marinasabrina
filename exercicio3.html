@@ -21,7 +21,6 @@
         border-radius: 5px;
         border-width: 0.1;
     }
-
 </style>
 
 <body>
@@ -31,21 +30,57 @@
             <tr>
                 <td>Valor</td>
                 <td>
-                    <input type="text" id="valor" name="valor" pattern="\d+(,\d{2})?" maxlength="12"
-                        required>
+                    <input type="text" id="valor" name="valor" pattern="\d+(,\d{2})?" maxlength="12" required>
                 </td>
             <tr>
                 <td></td>
                 <td>
-                    <button type="submit">Enviar</button>
+                    <button type="submit" onclick="valida()">Enviar</button>
 
                 </td>
             </tr>
             </tr>
 
-      
-        </table>
-  
 
+        </table>
+    </form>
+    <div id="mensagem" align="center"
+        style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
 </body>
+
+<script>
+
+
+
+
+    function mensagem(cor, texto) {
+        var div = document.getElementById("mensagem");
+        div.innerHTML = texto;
+        div.style.display = "block";
+        div.style.backgroundColor = cor;
+        setTimeout(function () {
+            div.style.display = "none";
+        }, 3000);
+    }
+
+    function valida() {
+        var ids = ["valor"];
+        for (var id of ids) {
+            var input = document.getElementById(id);
+            if (!input.disabled) {
+                var regexp = new RegExp(input.pattern);
+                if (!regexp.test(input.value)) {
+                    mensagem("red", "ERRO");
+                    input.value = "";
+                    input.focus();
+                    return;
+                }
+            }
+        }
+        mensagem("green", "OK");
+        document.getElementById("form1").submit();
+    }
+
+</script>
+
 </html>
