@@ -2,8 +2,6 @@
 <body>
 <?php
 
-
-
 $numeros = array($_POST);
 $operadores = array(
     $_POST['operador1'], $_POST['operador2'], $_POST['operador3'], $_POST['operador4'], $_POST['operador5'], $_POST['operador6'], $_POST['operador7'], $_POST['operador8'], $_POST['operador9'], $_POST['operador10']
