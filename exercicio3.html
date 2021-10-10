@@ -30,7 +30,8 @@
             <tr>
                 <td>Valor</td>
                 <td>
-                    <input type="text" id="valor" name="valor" pattern= "^\d+([,]\d{1,2})$" required>
+                    <input type="text" id="valor" name="valor" pattern="^\d+([,]\d{1,2})$" placeholder="1234,00"
+                        required>
                 </td>
             <tr>
                 <td></td>
@@ -65,16 +66,16 @@
 
     function valida() {
         var id = "valor";
-            var input = document.getElementById(id);
-            if (!input.disabled) {
-                var regexp = new RegExp(input.pattern);
-                if (!regexp.test(input.value)) {
-                    mensagem("red", "ERRO");
-                    input.value = "";
-                    input.focus();
-                    return;
-                }
+        var input = document.getElementById(id);
+        if (!input.disabled) {
+            var regexp = new RegExp(input.pattern);
+            if (!regexp.test(input.value)) {
+                mensagem("red", "ERRO");
+                input.value = "";
+                input.focus();
+                return;
             }
+        }
         mensagem("green", "OK");
         document.getElementById("form1").submit();
     }

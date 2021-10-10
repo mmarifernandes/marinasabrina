@@ -29,11 +29,10 @@ function validaCPF($cpf) {
     }
 
     for($i = 9; $i < 11; $i++){ 
-        for($d = 0, $c = 0; $c < $i; $c++) { 
-            
-        $d+= $cpf[$c] * (($i + 1) - $c); }
+        for($d = 0, $c = 0; $c < $i; $c++) {    
+        $d+= $cpf[$c] * (($i + 1) - $c); 
+    }
         $d = ((10 * $d) % 11) % 10;
-
         if($cpf[$c] != $d){ 
             return false; 
         } 
@@ -41,19 +40,26 @@ function validaCPF($cpf) {
             return false; 
         }
     }
-    return true; // se sim, true
-
+    return true; 
 }
 echo("<script>console.log('PHP: " . validaCPF($cpf) . "');</script>");
 
 if (isset($_POST['botao1'])) {
     $cpf = $_POST['cpf'];
     if (validaCPF($cpf) == true) {
-       echo "CPF válido";
-      echo "<br>";
-        echo $_POST["cpf"];
+    echo "<center>";
+    echo "<br>";
+    echo "<h1>";
+    echo "CPF válido";
+    echo "<br>";
+    echo $_POST["cpf"];
+    echo "</h1>";
     } else {
-        echo "CPF inválido";
+    echo "<center>";
+    echo "<br>";
+    echo "<h1>";
+    echo "CPF inválido!!!!!!!!!!!!!!!!";
+    echo "</h1>";
     }
 } 
 ?>

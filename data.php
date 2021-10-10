@@ -7,7 +7,7 @@ var_dump($_POST);
 echo "</pre>";
 echo "<hr>";
 
-function checaData($data) { //CHECA SE A DATA É REAL
+function checaData($data) { 
     $data = explode("/", $_POST["data"]);
     $d = $data[0];
     $m = $data[1];
@@ -17,7 +17,7 @@ if ($checa == true) { return true; } else { echo "DATA INVÁLIDA!"; }
 
 } 
 
-function checaDias($dias) { //CHECA SE O DIA É VALIDO
+function checaDias($dias) {
     $dias = $_POST["dias"];
 if (!is_numeric($dias) || $dias < 0 || strrpos($dias, ".") == true) { echo "DIA INVÁLIDO!"; } else { return true; } 
 

@@ -2,17 +2,6 @@
 <body>
 <?php
 
-
-// Transcrever um valor monetário
-// front-end HTML/JS
-// input text valor, deve ser um valor monetário válido entre 0,01 e 999999999,99
-// button enviar, só deve enviar se o valor monetário for válido
-
-// back-end PHP
-// mostra uma mensagem de erro se o valor monetário for inválido
-// só deve transcrever e mostrar o valor por exdezenaso se o valor monetário for válido
-
-var_dump($_POST);
 $num = $_POST['valor'];
 function convertervalor($num){ 
 $numeros = array( 
@@ -54,21 +43,24 @@ $plural = array("",1=>"mil",2=>"milhões",3=>"bilhões");
 
 $centavos = explode(",",$num);
 $num = str_replace(",", ".", $num);
+if(!is_numeric($num)){ 
+            echo "</h1>";
+            echo "<h1>";
+            echo 'ERRO';
+            echo "</h1>";
+        return false; 
+    }
 $num = number_format($num, 2, ".", ",");
 echo $num;
+
 $numseparado = explode(".", $num);
 $todonumero = $numseparado[0];
 $centavos = $numseparado[1];
-// echo substr($centavos, 0, 1);
-// echo '<br>';
-// echo strlen($centavos);
 $invertida = array_reverse(explode(",", $todonumero));
 krsort($invertida);
 $palavras = "";
 foreach ($invertida as $x => $i) {
-    // echo '<br>';
-    // echo substr($i, 2, 1);
-    // echo '<br>';
+
     if ($i == 0) {
         continue;
     }
@@ -78,22 +70,15 @@ foreach ($invertida as $x => $i) {
             echo substr($i, 2, 3);
         }else{
             $palavras.= $numeros[($i)];
-            $unidades.= $numeros[($i)];
             if( substr($i, 1, 2) == 10){
                 $palavras.= "e ".$dezenas[(1)];
             }
-            // echo '<br>';
-            // echo substr($i, 1, 2);
+
         }
-        // echo  substr($i, 0, 2);
-        // echo '<br>';
-        // echo $palavras;
-        
-        // }elseif(substr($i, 0, 1)) 
-        
+
     }  elseif ($i < 100) {
-          if (substr($i, 0, 1) == 0 && strlen($i) == 3) {
-              $palavras.= $dezenas[substr($i, 1, 1) ];
+        if (substr($i, 0, 1) == 0 && strlen($i) == 3) {
+            $palavras.= $dezenas[substr($i, 1, 1) ];
             } 
             if (substr($i, 2, 1) != 0) {
                 $palavras.= " e " . $numeros[substr($i, 2, 1) ];
@@ -101,7 +86,7 @@ foreach ($invertida as $x => $i) {
             else {
                 $palavras.= $dezenas[substr($i, 0, 1) ];
                 if (substr($i, 1, 1) != 0) {
-                 $palavras.= " e " . $numeros[substr($i, 1, 1) ];
+                $palavras.= " e " . $numeros[substr($i, 1, 1) ];
                 }
             }
             
@@ -113,13 +98,11 @@ foreach ($invertida as $x => $i) {
                 $palavras.= $centenas[(substr($i, 0, 1)) ];
             }
             if (substr($i, 1, 2) < 20 && substr($i, 1, 1) != 0) {
-               
                 $palavras.= " e " . $numeros[(substr($i, 1, 2)) ];
             } else {
                 
                 if (substr($i, 1, 1) != 0) {
-                    // echo substr($i, 1, 1);
-                    // echo '<br>';
+
                     $palavras.= " " . $dezenas[substr($i, 1, 1) ];
                 }
                 if (substr($i, 2, 1) != 0) {
@@ -162,7 +145,7 @@ $palavras.= ' real';
 } else {
 $palavras.= ' reais';
 }
-if ($centavos > 0) {//arrumar
+if ($centavos > 0) {
     if($todonumero != 0){
         $palavras.= " e ";
         echo '<br>';
@@ -173,13 +156,11 @@ if ($centavos > 0) {//arrumar
             $palavras.= $numeros[($centavos) ];
         }
         if (substr($centavos, 0, 1) == 0) {
-            // echo substr($centavos, 0, 1);
         $palavras.= $numeros[substr($centavos, 1, 1) ];
 
     } if ($centavos >= 20 && $centavos < 100) {
         $palavras.=  $dezenas[substr($centavos, 0, 1) ] . ' ';
         if (substr($centavos, 1, 1) != 0) {
-            // echo  $numeros[substr($centavos, 1, 1) ];
             $palavras.= " e " . $numeros[substr($centavos, 1, 1) ];
         }
     }
@@ -211,10 +192,6 @@ $palavras.= ' centavos';
 }
 return $palavras;
 }
-
-// for ($num = 0.01; $num < 1000000000; $num += 0.01){
-//     echo convertervalor($num);
-// }
 
 echo '<br>';
 echo "<h1 align='center'>".convertervalor("$num")."</h1>";
