@@ -44,9 +44,8 @@ return $result;
 }
 
 
-for ($i = 1; $i< 11; $i++){
-    if(converte($_POST[$i]) != $romanos['M'] &&  converte($_POST[$i]) != $romanos['CM'] && converte($_POST[$i]) != $romanos['D'] && converte($_POST[$i]) != $romanos['CD'] && converte($_POST[$i]) != $romanos['C']&& converte($_POST[$i]) != $romanos['XC'] && converte($_POST[$i]) != $romanos['L']&& converte($_POST[$i]) != $romanos['XL'] && converte($_POST[$i]) != $romanos['X']&& converte($_POST[$i]) != $romanos['IX'] && converte($_POST[$i]) != $romanos['V'] && converte($_POST[$i]) != $romanos['IV'] && converte($_POST[$i]) != $romanos['I']){
-                    echo "</h1>";
+
+    if(!preg_match("(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)", $_POST[1])){
             echo "<h1>";
             echo 'ERRO';
             echo "</h1>";
@@ -82,7 +81,7 @@ for ($i = 1; $i< 11; $i++){
 
 echo '<br>';
     }
-    }
+    
 ?>
 </body>
 </html>
