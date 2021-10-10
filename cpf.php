@@ -24,7 +24,7 @@ function validaCPF($cpf) {
         return false;  
     }
 
-    if(is_numeric($cpf) == false){ 
+    if(!is_numeric($cpf)){ 
         return false; 
     }
 

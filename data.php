@@ -19,7 +19,7 @@ if ($checa == true) { return true; } else { echo "DATA INVÁLIDA!"; }
 
 function checaDias($dias) { //CHECA SE O DIA É VALIDO
     $dias = $_POST["dias"];
-if (!is_numeric($dias) || $dias < 0) { echo "DIA INVÁLIDO!"; } else { return true; } 
+if (!is_numeric($dias) || $dias < 0 || strrpos($dias, ".") == true) { echo "DIA INVÁLIDO!"; } else { return true; } 
 
 }
 
@@ -33,8 +33,6 @@ function diasUteis($data, $dias) {
     $datas["pascoa"] = easter_date($a[2]);
     $datas["sextasanta"] = $datas["pascoa"] - (2 * $dia);
     $datas["carnaval"] = $datas["pascoa"] - (47 * $dia);
-    echo date("m-d", $datas["carnaval"]);
-    echo '<br>';
     $datas["corpuschristi"] = $datas["pascoa"] + (60 * $dia);
     $feriados = array(
         "01-01", 
@@ -50,7 +48,6 @@ function diasUteis($data, $dias) {
         date("m-d", $datas["pascoa"]),
         date("m-d", $datas["corpuschristi"]),
     ); 
-    print_r($feriados);
     if (preg_match("(/)", $data) == true) {
         $data = implode("-", array_reverse(explode("/", $data)));
     }
@@ -60,13 +57,9 @@ function diasUteis($data, $dias) {
     while ($qtd < $dias) {
         $c++;
         $diaa = date("m-d", strtotime("+".$c."day", strtotime($data)));
-        echo $diaa;
-        echo '<br>';
         $diasemana = date("w", strtotime("+".$c."day", mktime(0, 0, 0, $array[1], $array[2], $array[0])));
-        echo $diasemana;
         if ($diasemana != "0" && $diasemana != "6" && !in_array($diaa, $feriados)) {
            $qtd++; }
-        echo $diasemana;
     }
     return date("d/m/Y", strtotime("+".$c."day", strtotime($data)));
 }
@@ -74,7 +67,6 @@ function diasUteis($data, $dias) {
 
 
 echo "<h1 align='center'>".diasUteis($data, $dias)."</h1>";
-//print_r(feriadosMoveis($data));
 ?>
 </body>
 </html>
