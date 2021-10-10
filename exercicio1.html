@@ -30,7 +30,8 @@
             <tr>
                 <td>CPF</td>
                 <td>
-                <input type="text" id="cpf" name="cpf" placeholder="999999999-99" maxlength="12" required  pattern="^[0-9]{9}-[0-9]{2}$" />
+                    <input type="text" id="cpf" name="cpf" placeholder="999999999-99" maxlength="12" required
+                        pattern="^[0-9]{9}-[0-9]{2}$" />
                 </td>
             <tr>
                 <td></td>
@@ -43,33 +44,34 @@
 
         </table>
     </form>
-    <div id="mensagem" align="center" style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
+    <div id="mensagem" align="center"
+        style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
     </div>
 </body>
 <script>
-    		function mensagem(cor, texto) {
-			var div = document.getElementById("mensagem");
-			div.innerHTML = texto;
-			div.style.display = "block";
-			div.style.backgroundColor = cor;
-			setTimeout(function () {
-				div.style.display = "none";
-			}, 3000);
-		}
-function valida() {
-			var id = "cpf";
-			var input = document.getElementById(id);
-            var aa = (input.value).replace("-", "");
-				if (!input.disabled) {
-					var regexp = new RegExp(input.pattern);
-					if (!regexp.test(input.value)) {
-						mensagem("red", "ERRO");
-						input.value = "";
-						input.focus();
-						return;
-					}
-				}
-                if (aa == "00000000000" ||
+    function mensagem(cor, texto) {
+        var div = document.getElementById("mensagem");
+        div.innerHTML = texto;
+        div.style.display = "block";
+        div.style.backgroundColor = cor;
+        setTimeout(function () {
+            div.style.display = "none";
+        }, 3000);
+    }
+    function valida() {
+        var id = "cpf";
+        var input = document.getElementById(id);
+        var aa = (input.value).replace("-", "");
+        if (!input.disabled) {
+            var regexp = new RegExp(input.pattern);
+            if (!regexp.test(input.value)) {
+                mensagem("red", "ERRO");
+                input.value = "";
+                input.focus();
+                return;
+            }
+        }
+        if (aa == "00000000000" ||
             aa == "11111111111" ||
             aa == "22222222222" ||
             aa == "33333333333" ||
@@ -79,14 +81,14 @@ function valida() {
             aa == "77777777777" ||
             aa == "88888888888" ||
             aa == "99999999999") {
-                mensagem("red", "ERRO");
-						input.value = "";
-						input.focus();
-						return;
-                }
-			mensagem("green", "OK");
-			document.getElementById("form1").submit();
-		}
+            mensagem("red", "ERRO");
+            input.value = "";
+            input.focus();
+            return;
+        }
+        mensagem("green", "OK");
+        document.getElementById("form1").submit();
+    }
 
 </script>
 
