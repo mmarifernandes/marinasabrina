@@ -53,8 +53,8 @@
             <tr id="adicionarcells">
 
                 <td>
-                    <input type="text" id="valor1" name="1" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)"
-                      required>
+                    <input type="text" id="valor1" name="1"
+                        pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
                     <select id="operador1" name="operador1">
                         <option value="+" selected>+</option>
                         <option value="-">-</option>
@@ -63,20 +63,21 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" id="valor2" name="2" pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)"
-                        required>
+                    <input type="text" id="valor2" name="2"
+                        pattern="(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)" required>
                 </td>
 
             </tr>
             <tr>
                 <td>
                     <input type="button" id="adiciona" value="+" style="width: 20px;" onclick="myFunction();">
-                    <input type="submit" value="=" style="width: 20px;">
+                    <input type="submit" onclick="valida()" value="=" style="width: 20px;">
                 </td>
             </tr>
         </table>
     </form>
-
+    <div id="mensagem" align="center"
+        style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>
 </body>
 <script>
 
@@ -91,11 +92,46 @@
         e++;
         i++;
         console.log(rowCount);
-        x.innerHTML = "<select id=\"operador" + e + "\" name=\"operador" + e + "\"><option value =\"+\" selected >+</option ><option value =\"-\">-</option><option value =\"\"></option><option value =\"/\">/</option></select><input type=\"text\" id=\"valor" + i + "\" name=\"" + i + "\" pattern=\"(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)\" required>";
+        x.innerHTML = "<select id=\"operador" + e + "\" name=\"operador" + e + "\"><option value =\"+\" selected >+</option ><option value =\"-\">-</option><option value =\"*\">*</option><option value =\"/\">/</option></select><input type=\"text\" id=\"valor" + i + "\" name=\"" + i + "\" pattern=\"(^(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$)\" required>";
+        console.log('aaaaaa');
         if (rowCount == 9) {
             document.querySelector("#adiciona").disabled = true;
         }
 
+    }
+
+    function mensagem(cor, texto) {
+        var div = document.getElementById("mensagem");
+        div.innerHTML = texto;
+        div.style.display = "block";
+        div.style.backgroundColor = cor;
+        setTimeout(function () {
+            div.style.display = "none";
+        }, 3000);
+    }
+
+    function valida() {
+        var ids = [];
+        for (var input of document.getElementsByTagName("input")) {
+            if ((input.id.startsWith("valor")) || (input.id.startsWith("valor"))) {
+                ids.push(input.id);
+            }
+        }
+        console.log(ids);
+        for (var id of ids) {
+            var input = document.getElementById(id);
+            if (!input.disabled) {
+                var regexp = new RegExp(input.pattern);
+                if (!regexp.test(input.value)) {
+                    mensagem("red", "ERRO");
+                    input.value = "";
+                    input.focus();
+                    return;
+                }
+            }
+        }
+        mensagem("green", "OK");
+        document.getElementById("form1").submit();
     }
 
 </script>
