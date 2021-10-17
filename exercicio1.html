@@ -86,6 +86,37 @@
             input.focus();
             return;
         }
+       
+            if (aa == null || aa == "") { 
+                 mensagem("red", "ERRO");
+                input.value = "";
+                input.focus();
+                return; }
+
+            if (!isNaN(aa.value)) { 
+                 mensagem("red", "ERRO");
+                input.value = "";
+                input.focus();
+                return;
+
+             }
+
+            var i;
+            var d;
+            var c;
+            for (i = 9; i < 11; i++) {
+                for (d = 0, c = 0; c < i; c++) {
+                    d += aa[c] * ((i + 1) - c);
+                }
+                d = ((10 * d) % 11) % 10;
+                if (aa[c] != d) {
+                    mensagem("red", "ERRO");
+                    input.value = "";
+                    input.focus();
+                    return;
+                }
+            }
+          
         mensagem("green", "OK");
         document.getElementById("form1").submit();
     }

@@ -76,6 +76,18 @@
                 return;
             }
         }
+        if(input.value > 999999999.99){
+            mensagem("red", "ERRO");
+            input.value = "";
+            input.focus();
+            return;
+        }
+         if (input.value == '0,0' || input.value == '0,00') {
+            mensagem("red", "ERRO");
+            input.value = "";
+            input.focus();
+            return;
+        }
         mensagem("green", "OK");
         document.getElementById("form1").submit();
     }

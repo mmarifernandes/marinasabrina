@@ -43,34 +43,34 @@ $numeroextenso = str_replace("ú", "u", $numeroextenso);
 $numeroextenso = str_replace("ù", "u", $numeroextenso);
 $numeroextenso = str_replace("û", "u", $numeroextenso);
 
-$words = explode(" ", $numeroextenso);
+$palavras = explode(" ", $numeroextenso);
 $ultimo = '';
 $resultado = 0;
 $somar = 0;
 $total = 1;
 
-foreach ($words as $word) {
+foreach ($palavras as $palavra) {
 
-    $word = strtolower($word);
+    $palavra = strtolower($palavra);
     
-    if($word == "e") {
+    if($palavra == "e") {
         $somar = 1;
         continue;
     }
     else{
         if($somar == 1) {
-            $total += $numeros[$word];
+            $total += $numeros[$palavra];
             $somar = 0;
         }
         else if($somar == 0){
-            if($ultimo !== '' && $ultimo > $numeros[$word]) {
-                $total += $numeros[$word];
+            if($ultimo !== '' && $ultimo > $numeros[$palavra]) {
+                $total += $numeros[$palavra];
             }else{
-                $total *= $numeros[$word];
+                $total *= $numeros[$palavra];
             }
         }
-        $ultimo = $numeros[$word];
-        if($numeros[$word] >= 1000) {
+        $ultimo = $numeros[$palavra];
+        if($numeros[$palavra] >= 1000) {
             $resultado += $total;
             $total = 0;
             $ultimo = '';
