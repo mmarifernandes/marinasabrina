@@ -16,9 +16,9 @@
 		//coloque aqui o código para validação dos campos recebidos
 		//se ocorreu algum erro, preencha a variável $error com uma mensagem de erro
 		// echo $total;
-		
+		// aa
+		$total++;
 		if ($error == "") {
-			$total++;
 			$db = new SQLite3("pizzaria.db");
 			$db->exec("PRAGMA foreign_keys = ON");
 			$db->exec("insert into sabor (codigo, nome, tipo) values ($total, '".strtoupper($_POST["sabor"])."', '".$_POST["selecttipos"]."')");
