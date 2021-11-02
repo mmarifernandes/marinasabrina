@@ -90,41 +90,111 @@
 ?>
 </body>
 <script>
-	let options = []
+		let options = []
+		let valores = []
 	let i=0;
-	let delete1 = []
+	let table = document.querySelector("#tableingredientes");
+	for(let i = 0; i<table.rows.length; i++){
+		// console.log((document.querySelectorAll("#valores")[i]).value);
+		options.push((document.querySelectorAll("#valores")[i]).value);
+		valores.push((document.querySelectorAll("#valores")[i]).value);
+
+		
+		// console.log(valores);
+	}
+	for(let i = 0; i<options.length; i++){
+		let select1 = document.querySelector("#selectingredientes")
+		let option1 = document.querySelectorAll("#ingrediente")[options[i]-1]
+
+		option1.disabled = true;
+
+	}
+	let b =document.querySelector("#optionsarray")
+		b.setAttribute('value', options )
 	function add(){
 		let table = document.querySelector("#tableingredientes");
 		let select = document.querySelector("#selectingredientes")
 		let valor = document.querySelectorAll("#ingrediente")
-		
+		let botao = document.getElementById("mais");
+		let option = document.querySelectorAll("#ingrediente")[select.value-1]
 		options.push(select.value);
 		options;
-		console.log(options);
+		valores.push(select.value);
+		valores;
+		if(option.disabled == true){
+			alert("Ingrediente já inserido")
+		}else{
+		option.disabled = true;
 		let x = table.insertRow(-1);
 		let rowID = table.rows.length;
-		x.setAttribute('id', rowID )
+		x.setAttribute('id', rowID );
 		x.innerHTML = '<tr><td id = '+i+'><input type="hidden" name="valor" value='+options+'>'+select.options[select.value-1].text+'</td><td><input type="button" name = "menos" id = "menos" value="menos"  width = "2%" onclick="tira(this);"></td></tr>'
 		i++;
 		let b =document.querySelector("#optionsarray")
 		b.setAttribute('value', options )
+		}
+		// console.log(select.value);
+		// console.log(option);
 
+		// console.log(select.getElementsById("ingrediente"));
+
+		// options.push(valores);
+		// console.log(valores)
 	};
 	
-		
-		function tira(t){
-			let row = t.closest('tr');
-			console.log(row.id);
-			let a = row.id;
-			options.splice(a-1, 1);
-			options;
-   			document.getElementById("tableingredientes").deleteRow(row.rowIndex);
-    		console.log(options);
+	
+	function tira(t){
+		let row = t.closest('tr');
+		let table = document.querySelector("#tableingredientes");
+		let select = document.querySelector("#selectingredientes")
+		let option = document.querySelectorAll("#ingrediente")[options[row.rowIndex]-1]
+		let botao = document.getElementById("mais");
+		// if(option.disabled = true){
+			// option.disabled = false;
+			// }
+			console.log(option)
+			let a = t.closest('tr').id;
+			console.log(row.id-1)
+			// console.log(t.closest('tr').id);
+			option.disabled = false;
+			options.splice(row.rowIndex, 1);
+			document.getElementById("tableingredientes").deleteRow(row.rowIndex);
 			let b =document.querySelector("#optionsarray")
 			b.setAttribute('value', options )
-			
-		};
+			// console.log(botao);
+		
 
+
+	
+	};
+
+	function mensagem(cor, texto) {
+			var div = document.getElementById("mensagem");
+			div.innerHTML = texto;
+			div.style.display = "block";
+			div.style.backgroundColor = cor;
+			setTimeout(function () {
+				div.style.display = "none";
+			}, 3000);
+		}
+
+		function valida() {
+		
+         
+				var input = document.getElementById("nome")
+				console.log(input.pattern);
+			
+					var regexp = new RegExp(input.pattern);
+					if (!regexp.test(input.value)) {
+						mensagem("red", "ERRO");
+						input.value = "";
+						input.focus();
+						return false;
+					}else{
+						mensagem("green", "OK");
+						return true;
+					};
+            }
 </script>
 <?php
 

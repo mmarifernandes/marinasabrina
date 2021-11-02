@@ -18,7 +18,7 @@ if (isset($_GET["codigo"])) {
 		echo "<table>\n";
 		echo "<tr>\n";
 		echo "<td>Nome</td>\n";
-		echo "<td><input type=\"text\" id=\"nome\" name=\"nome\" value=\"".ucfirst(strtolower($row["nome"]))."\" pattern=\"[a-z\s]+$\" size=\"50\" required></td>\n";
+		echo "<td><input type=\"text\" id=\"nome\" name=\"nome\" value=\"".ucfirst(strtolower($row["nome"]))."\" pattern=\"[a-zA-Z\s]+$\" size=\"50\" required></td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td>Tipo</td>\n";
@@ -43,7 +43,7 @@ if (isset($_GET["codigo"])) {
 		
 		echo '</select>';
 		
-		echo '<label><input type="button" name = "mais" value="mais" src="mais.png" width = "2%" onclick="add();"></label>';
+		echo '<label><input type="button" id = "mais" name = "mais" value="mais" src="mais.png" width = "2%" onclick="add();"></label>';
 		
 		
 		echo "</td>";
@@ -136,8 +136,17 @@ $db->close();
 	for(let i = 0; i<table.rows.length; i++){
 		// console.log((document.querySelectorAll("#valores")[i]).value);
 		options.push((document.querySelectorAll("#valores")[i]).value);
+		valores.push((document.querySelectorAll("#valores")[i]).value);
+
 		
 		// console.log(valores);
+	}
+	for(let i = 0; i<options.length; i++){
+		let select1 = document.querySelector("#selectingredientes")
+		let option1 = document.querySelectorAll("#ingrediente")[options[i]-1]
+
+		option1.disabled = true;
+
 	}
 	let b =document.querySelector("#optionsarray")
 		b.setAttribute('value', options )
@@ -145,10 +154,16 @@ $db->close();
 		let table = document.querySelector("#tableingredientes");
 		let select = document.querySelector("#selectingredientes")
 		let valor = document.querySelectorAll("#ingrediente")
-
-
+		let botao = document.getElementById("mais");
+		let option = document.querySelectorAll("#ingrediente")[select.value-1]
 		options.push(select.value);
 		options;
+		valores.push(select.value);
+		valores;
+		if(option.disabled == true){
+			alert("Ingrediente já inserido")
+		}else{
+		option.disabled = true;
 		let x = table.insertRow(-1);
 		let rowID = table.rows.length;
 		x.setAttribute('id', rowID );
@@ -156,25 +171,40 @@ $db->close();
 		i++;
 		let b =document.querySelector("#optionsarray")
 		b.setAttribute('value', options )
+		}
+		// console.log(select.value);
+		// console.log(option);
+
+		// console.log(select.getElementsById("ingrediente"));
 
 		// options.push(valores);
 		// console.log(valores)
 	};
 	
-
+	
 	function tira(t){
 		let row = t.closest('tr');
 		let table = document.querySelector("#tableingredientes");
-
-		let a = t.closest('tr').id;
-		console.log(t.closest('tr').id);
-		options.splice(row.rowIndex, 1);
-		document.getElementById("tableingredientes").deleteRow(row.rowIndex);
-		let b =document.querySelector("#optionsarray")
-		b.setAttribute('value', options )
-		console.log(options);
-
+		let select = document.querySelector("#selectingredientes")
+		let option = document.querySelectorAll("#ingrediente")[options[row.rowIndex]-1]
+		let botao = document.getElementById("mais");
+		// if(option.disabled = true){
+			// option.disabled = false;
+			// }
+			console.log(option)
+			let a = t.closest('tr').id;
+			console.log(row.id-1)
+			// console.log(t.closest('tr').id);
+			option.disabled = false;
+			options.splice(row.rowIndex, 1);
+			document.getElementById("tableingredientes").deleteRow(row.rowIndex);
+			let b =document.querySelector("#optionsarray")
+			b.setAttribute('value', options )
+			// console.log(botao);
 		
+
+
+	
 	};
 
 	function mensagem(cor, texto) {
