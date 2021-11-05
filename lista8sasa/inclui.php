@@ -4,13 +4,15 @@
 	$db = new SQLite3("pizzaria.db");
 	$db->exec("PRAGMA foreign_keys = ON");
 	if (isset($_POST["inclui"])) {
+		var_dump ($_GET);
 		$error = "";
+		// echo $_POST['numero'];
 		// echo $_POST['selectingredientes'];
 		// echo $_POST['selecttipos'];
 		$x = $_POST['optionsarray'];
 		$valores = explode(",",$x);
-		$total = $db->query("select count(*) as total from sabor")->fetchArray()["total"];
-
+		// echo $x;
+		$total = $db->query("select count(*) as total from pizza")->fetchArray()["total"];
 		
 		
 		//coloque aqui o código para validação dos campos recebidos
@@ -21,43 +23,64 @@
 			$total++;
 			$db = new SQLite3("pizzaria.db");
 			$db->exec("PRAGMA foreign_keys = ON");
-			$db->exec("insert into pizza (codigo, comanda, tamanho, borda) values ($total, '".strtoupper($_POST["sabor"])."', '".$_POST["selecttipos"]."')");
-			// for($i=0;$i<count($valores);$i++){
-			// 	// echo $valores[$i];
-			// 	$db->exec("insert into comanda (numero, data) values ($total, $valores[$i])");
-			// }
+			// echo $_POST['tamanho'];
+			echo $_POST['numero'];
+
+			if($_POST["borda"] == "0"){
+				$db->exec("insert into pizza (codigo, comanda, tamanho) values ($total, '".$_POST['numero']."', '".$_POST["tamanho"]."')");
+
+			}else{
 			
-			
-			echo $db->changes()." pizza(s) incluída(s)<br>\n";
-			echo $total." é o código da última pizza incluída.\n";
-			$db->close();
+			$db->exec("insert into pizza (codigo, comanda, tamanho, borda) values ($total, '".$_POST['numero']."', '".$_POST["tamanho"]."', '".$_POST["borda"]."')");
+			};
+			for($i=0;$i<count($valores);$i++){
+					echo $valores[$i];
+					$db->exec("insert into pizzasabor (pizza, sabor) values ($total, $valores[$i])");
+			}
+				
+				
+				echo $db->changes()." pizza(s) incluída(s)<br>\n";
+				echo $total." é o código da última pizza incluída.\n";
+				$db->close();
+			} else {
+				echo "<font color=\"red\">".$error."</font>";
+			}
 		} else {
-			echo "<font color=\"red\">".$error."</font>";
-	}
-} else {
 
-    echo '<form name="inclui" action="select.php" method="POST">';
-    echo '<table id="table1">';
-    echo "<h1>Inclusão de Pizza</h1>\n";
-    echo '<tbody>';
-	
-    echo '<tr>';
-    echo '<td><label for="numero">Número</label></td>';
-    echo '<td>'.$_GET['numero'].'</td>';
-    echo '</tr>';
-	
-    echo '<tr>';
-    echo '<td><label for="data">Data</label></td>';
-	    echo '<td>'.$_GET['data'].'</td>';
+			echo "<form name=\"inclui\" action=\"inclui.php\" method=\"post\">\n";
+			echo '<table id="table1">';
+			echo "<h1>Inclusão de Pizza</h1>\n";
+			echo '<tbody>';
+			
+			echo '<tr>';
+			echo '<td><label for="numero">Comanda:</label></td>';
+			echo '<td>'.$_GET['numero'].'</td>';
+			echo '</tr>';
+				echo "<input type=\"hidden\" id=\"numero\" name=\"numero\" value=\"".$_GET['numero']."\">";
 
-    echo '</tr>';
-	
-    echo '<tr>';
-    echo '<td><label for="tamanho">Tamanho</label></td>';
-    echo '<td>';
-    echo '<select name="tamanho" id="tamanho">';
-	$tamanho = $db->query("select tamanho.nome as tamanho, tamanho.codigo as codigo from tamanho");
-    while ($tam = $tamanho->fetchArray()) {
+			
+			echo '<tr>';
+			echo '<td><label for="data">Data</label></td>';
+			$data = $db->query("select case strftime('%w', data)
+when '0' then 'Dom'
+when '1' then 'Seg'
+when '2' then 'Ter'
+when '3' then 'Qua'
+when '4' then 'Qui'
+when '5' then 'Sex'
+when '6' then 'Sab'
+end || strftime(' %d/%m/%Y',data) as data from comanda where numero = ".$_GET['numero']);
+			while ($row = $data->fetchArray()) {
+			echo '<td>'.$row['data'].'</td>';
+			}
+			echo '</tr>';
+			
+			echo '<tr>';
+			echo '<td><label for="tamanho">Tamanho</label></td>';
+			echo '<td>';
+			echo '<select name="tamanho" id="tamanho">';
+			$tamanho = $db->query("select tamanho.nome as tamanho, tamanho.codigo as codigo from tamanho");
+			while ($tam = $tamanho->fetchArray()) {
 		echo "<option value=\"".$tam["codigo"]."\">".strtolower($tam["tamanho"])."</option>";
     }
     echo '</select>';
@@ -70,7 +93,7 @@
     echo '<select name="borda" id="borda">';
  	$results = $db->query("select borda.codigo as bordacodigo, borda.nome as borda from borda");
 	 
-    echo '<option value="nao">não</option>';
+    echo '<option value="0">não</option>';
 	while ($row = $results->fetchArray()) {
 		echo "<option value=\"".$row["bordacodigo"]."\">".strtolower($row["borda"])."</option>\n";
 	}
@@ -83,6 +106,8 @@
     echo '<td>';
     
     echo '<select name="tipo" id="tipo" onchange="muda();">';
+		    echo '<option value="selecione">Selecione</option>';
+
     $results = $db->query("select tipo.codigo as tipocodigo, tipo.nome as tipo from tipo");
 	while ($row = $results->fetchArray()) {
 		echo "<option value=\"".$row["tipocodigo"]."\">".strtolower($row["tipo"])."</option>\n";
@@ -91,7 +116,6 @@
     // if(isset($_GET["sabor"]))
     echo "<input type=\"hidden\" id=\"tipovalor\" name=\"tipovalor\">";
     echo '<select name="selectsabor" id="sabor">';
-	
 	echo '</select>';   
 	echo '<label><input type="button" name = "mais" value="mais" src="mais.png" width = "2%" onclick="add();"></label>';
 	echo "</td>";
@@ -104,9 +128,9 @@
     echo "</td>";
 	echo "<input type=\"hidden\" id=\"optionsarray\" name=\"optionsarray\">";
 	echo "</tr>\n";
-    echo '<td><input type="button" name="inclui" value="Inclui"</td>';
     echo '<tbody>';
     echo '</table>';
+    echo "<input type=\"submit\" name=\"inclui\"  value=\"inclui\"</td>";
     echo '</form>';
 }
         ?>
@@ -123,6 +147,7 @@
 			
 				case "1":
 					<?php 
+		
 $results2 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor from sabor where tipo = 1");
 $list_count = 0;
 $list_count1 = 0;
@@ -132,8 +157,9 @@ $list_count2 = 0;
         ?>
 	
 
-            select.options[<?php echo $list_count; ?>]=new Option("<?php echo $row2['sabor']; ?>", "<?php echo $row2['saborcodigo']; ?>");
+            select.options[<?php echo $list_count; ?>]=new Option("<?php echo strtolower($row2['sabor']); ?>", "<?php echo $row2['saborcodigo']; ?>");
 			<?php
+			
                 $list_count++;
             } ?>
 			break;
@@ -147,7 +173,7 @@ $results3 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
         ?>
 	
 
-            select.options[<?php echo $list_count1; ?>]=new Option("<?php echo $row3['sabor']; ?>", "<?php echo $row3['saborcodigo']; ?>");
+            select.options[<?php echo $list_count1; ?>]=new Option("<?php echo strtolower($row3['sabor']); ?>", "<?php echo $row3['saborcodigo']; ?>");
 			<?php
                 $list_count1++;
             } ?>
@@ -160,7 +186,7 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 	while ($row4 = $results4->fetchArray()) {
 		
         ?>
-            select.options[<?php echo $list_count2; ?>]=new Option("<?php echo $row4['sabor']; ?>", "<?php echo $row4['saborcodigo']; ?>");
+            select.options[<?php echo $list_count2; ?>]=new Option("<?php echo strtolower($row4['sabor']); ?>", "<?php echo $row4['saborcodigo']; ?>");
 			<?php
                 $list_count2++;
             } ?>
@@ -238,4 +264,11 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 	
 	};
     </script> 
+	<?php
+
+
+if (isset($_POST["inclui"])) {
+	echo "<script>setTimeout(function () { window.open(\"select.php\",\"_self\"); }, 3000);</script>";
+}
+?>
 </html>
