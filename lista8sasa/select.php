@@ -75,31 +75,6 @@ if (isset($_GET["pago"])) $where[] = "pago = ".$_GET["pago"] == 'sim' ? 'pago = 
 $where = (count($where) > 0) ? "where ".implode(" and ", $where) : "";
 
 echo $where;
-/*
-if (isset($_GET["pago"])) {
-	$total = $db->query("select count(pago) as total from comanda ".$where)->fetchArray()["total"];
-}
-
-if (isset($_GET["pizza"])) {
-	$total = $db->query("select count(*) as total from pizza 
-	join comanda on pizza.comanda = comanda.numero join pizzasabor on pizza.codigo = pizzasabor.pizza
-	join sabor on pizzasabor.sabor = sabor.codigo
-	join tipo on sabor.tipo = tipo.codigo".$where)->fetchArray()["total"];
-}
-
-if (isset($_GET["mesa"])) {
-	$total = $db->query("select count(codigo) as total from pizza 
-	join comanda on pizza.comanda = comanda.numero
-	join pizzasabor on pizza.codigo = pizzasabor.pizza
-	join sabor on pizzasabor.sabor = sabor.codigo
-	join tipo on sabor.tipo = tipo.codigo".$where)->fetchArray()["total"];
-}*/
-
-/*
-$total = $db->query("select count(*) as total from comanda 
-".$where)->fetchArray()["total"];*/
-
-
 
 if (isset($_GET["numero"])) {
 	$total = $db->query("select count(*) as total from comanda ".$where)->fetchArray()["total"];
@@ -126,10 +101,7 @@ if (isset($_GET["pago"])) {
 }
 
 if (isset($_GET["valor"])) {
-	$total = $db->query("select max(case
-	when borda.preco is null then 0
-	else borda.preco
-	end+precoportamanho.preco) as total from comanda 
+	$total = $db->query("select max(case when borda.preco is null then 0 else borda.preco end +precoportamanho.preco) as total from comanda 
 	join pizza on pizza.comanda = comanda.numero
 	join pizzasabor on pizza.codigo = pizzasabor.pizza
 	join sabor on pizzasabor.sabor = sabor.codigo
@@ -152,11 +124,21 @@ $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
 
 
-$results = $db->query("select numero, mesa.nome as mesa, data, pizza, max(case
+
+$results = $db->query("select numero, mesa.nome as mesa, pizza, max(case
 when borda.preco is null then 0
 else borda.preco
 end+precoportamanho.preco) as valor, case
-when pago = 1 then 'sim' else 'não' end as pago
+when pago = 1 then 'sim' else 'não' end as pago,
+case strftime('%w', data)
+when '0' then 'Dom'
+when '1' then 'Seg'
+when '2' then 'Ter'
+when '3' then 'Qua'
+when '4' then 'Qui'
+when '5' then 'Sex'
+when '6' then 'Sab'
+end || strftime(' %d/%m/%Y',data) as data
 from comanda 
 join pizza on pizza.comanda = comanda.numero
 join pizzasabor on pizza.codigo = pizzasabor.pizza
@@ -166,22 +148,9 @@ join mesa on mesa.codigo = comanda.mesa
 join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
 left join borda on pizza.borda = borda.codigo 
 ".$where." group by 1"." order by ".$orderby." limit ".$limit." offset ".$offset);
-/*
-while ($row = $results->fetchArray()) {
-	echo "<tr>\n";
-	echo "<td><a href=\"update.php?numero=".$row["numero"]."\">&#x1F4DD;</a></td>\n";
-	echo "<td>".$row["numero"]."</td>\n";
-	echo "<td>".$row["data"]."</td>\n";
-	echo "<td>".$row["mesa"]."</td>\n";
-    echo "<td>".$row["pizza"]."</td>\n";
-    //echo "<td>".$row["valor"]."</td>\n";
-    echo "<td>".$row["pago"]."</td>\n";
-	echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda número ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
-	echo "</tr>\n";
-}
-*/
-while ($row = $results->fetchArray()){	
-	echo "<tr id='table'>\n";	
+while ($row = $results->fetchArray()){
+		echo "<tr>\n";
+	
 	echo "<td><a href=\"inclui.php?numero=".$row["numero"]."\">&#x1F4DD;</a></td>\n";	
 	echo "<td>".$row["numero"]."</td>\n";	
 	echo "<td>".$row["data"]."</td>\n";	
