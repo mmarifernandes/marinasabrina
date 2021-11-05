@@ -5,9 +5,7 @@
 	$db->exec("PRAGMA foreign_keys = ON");
 	if (isset($_POST["inclui"])) {
 		$error = "";
-		// echo $_POST['numero'];
-		// echo $_POST['selectingredientes'];
-		// echo $_POST['selecttipos'];
+	
 		$x = $_POST['optionsarray'];
 		$valores = explode(",",$x);
 		// echo $x;
@@ -43,6 +41,13 @@
 			} else {
 				echo "<font color=\"red\">".$error."</font>";
 			}
+
+
+if (isset($_POST["inclui"])) {
+	echo "<script>setTimeout(function () { window.open(\"select.php\",\"_self\"); }, 3000);</script>";
+}
+
+
 		} else {
 
 			echo "<form name=\"incluiform\" action=\"inclui.php\" method=\"post\">\n";
@@ -262,9 +267,5 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 	
 	};
     </script> 
-	<?php
-	if (isset($_POST["inclui"])) {
-	echo "<script>setTimeout(function () { window.open(\"select.php\",\"_self\"); }, 3000);</script>";
-}
-?>
+
 </html>
