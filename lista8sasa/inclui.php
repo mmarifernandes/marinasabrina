@@ -4,7 +4,6 @@
 	$db = new SQLite3("pizzaria.db");
 	$db->exec("PRAGMA foreign_keys = ON");
 	if (isset($_POST["inclui"])) {
-		var_dump ($_GET);
 		$error = "";
 		// echo $_POST['numero'];
 		// echo $_POST['selectingredientes'];
@@ -24,7 +23,6 @@
 			$db = new SQLite3("pizzaria.db");
 			$db->exec("PRAGMA foreign_keys = ON");
 			// echo $_POST['tamanho'];
-			echo $_POST['numero'];
 
 			if($_POST["borda"] == "0"){
 				$db->exec("insert into pizza (codigo, comanda, tamanho) values ($total, '".$_POST['numero']."', '".$_POST["tamanho"]."')");
@@ -34,7 +32,7 @@
 			$db->exec("insert into pizza (codigo, comanda, tamanho, borda) values ($total, '".$_POST['numero']."', '".$_POST["tamanho"]."', '".$_POST["borda"]."')");
 			};
 			for($i=0;$i<count($valores);$i++){
-					echo $valores[$i];
+					// echo $valores[$i];
 					$db->exec("insert into pizzasabor (pizza, sabor) values ($total, $valores[$i])");
 			}
 				
@@ -47,7 +45,7 @@
 			}
 		} else {
 
-			echo "<form name=\"inclui\" action=\"inclui.php\" method=\"post\">\n";
+			echo "<form name=\"incluiform\" action=\"inclui.php\" method=\"post\">\n";
 			echo '<table id="table1">';
 			echo "<h1>Inclusão de Pizza</h1>\n";
 			echo '<tbody>';
@@ -130,7 +128,7 @@ end || strftime(' %d/%m/%Y',data) as data from comanda where numero = ".$_GET['n
 	echo "</tr>\n";
     echo '<tbody>';
     echo '</table>';
-    echo "<input type=\"submit\" name=\"inclui\"  value=\"inclui\"</td>";
+    echo "<input type=\"submit\" name=\"inclui\" value=\"inclui\">";
     echo '</form>';
 }
         ?>
@@ -265,9 +263,7 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 	};
     </script> 
 	<?php
-
-
-if (isset($_POST["inclui"])) {
+	if (isset($_POST["inclui"])) {
 	echo "<script>setTimeout(function () { window.open(\"select.php\",\"_self\"); }, 3000);</script>";
 }
 ?>
