@@ -204,62 +204,63 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 }
 
         
-		let options = []
+		let options1 = []
 		let valores = []
 	let i=0;
 	let b =document.querySelector("#optionsarray")
-		b.setAttribute('value', options )
+		b.setAttribute('value', options1 )
 
 	function add(){
 					
 		
-		let table = document.querySelector("#tablesabores");
+
 		let select1 = document.querySelector("#sabor")
-		// let valor = document.querySelectorAll("#ingrediente")
-		let botao = document.getElementById("mais");
-		let x = table.insertRow(-1);
-		let rowID = table.rows.length;
-		x.setAttribute('id', rowID );
 
+		let option = select1.options[select1.selectedIndex].value;
+
+		if(options1.indexOf(option) !== -1) {
+			alert("Ingrediente já inserido");
+			return;
+		}else{
+			let table = document.querySelector("#tablesabores");
+			let botao = document.getElementById("mais");
+			let x = table.insertRow(-1);
+			let rowID = table.rows.length;
+			let b =document.querySelector("#optionsarray")
+			options1.push(select1.value);
 	
-		console.log(select1.options[select1.selectedIndex].id);
-		// let option = document.querySelectorAll("#ingrediente")[select.value-1]
-		options.push(select1.value);
-		options;
-		
-		
-		x.innerHTML = '<tr><td id = '+i+'><input type="hidden" name="valor" value='+options+'>'+select1.options[select1.selectedIndex].text+'</td><td><input type="button" name = "menos" id = "menos" value="menos"  width = "2%" onclick="tira(this);"></td></tr>'
-		i++;
-		let b =document.querySelector("#optionsarray")
-		b.setAttribute('value', options )
-		// }
-		// console.log(select.value);
-		// console.log(option);
-
-		// console.log(select.getElementsById("ingrediente"));
-
-		// options.push(valores);
-		// console.log(valores)
+			// console.log(option);
+			// let option = document.querySelectorAll("#ingrediente")[select.value-1]
+			
+			
+			x.setAttribute('id', rowID );
+			x.innerHTML = '<tr><td id = '+i+'><input type="hidden" name="valor" value='+options1+'>'+select1.options[select1.selectedIndex].text+'</td><td><input type="button" name = "menos" id = "menos" value="menos"  width = "2%" onclick="tira(this);"></td></tr>'
+			i++;
+			b.setAttribute('value', options1 )
+			
+			
+		}
 	};
 			
 	function tira(t){
 		let row = t.closest('tr');
 		let table = document.querySelector("#tablesabores");
-		let select = document.querySelector("#sabor")
-		// let option = document.querySelectorAll("#ingrediente")[options[row.rowIndex]-1]
-		// let botao = document.getElementById("mais");
-		// if(option.disabled = true){
-			// option.disabled = false;
-			// }
-			// console.log(option)
+		let select1 = document.querySelector("#sabor")
+		// let option =select1.options[t.closest('tr').rowIndex]
+
+
+		// select1.option[options1[select1.options[t.closest('tr').rowIndex].id]].disabled = false;
+
+		// console.log(select1.options[options1[select1.options[t.closest('tr').rowIndex].id]])
+
+			// console.log(t.parentElement.previousElementSibling);
 			// let a = t.closest('tr').id;
-			console.log(row.id-1)
+			// console.log(row.id-1)
 			// console.log(t.closest('tr').id);
-			// option.disabled = false;
-			options.splice(row.rowIndex, 1);
+			options1.splice(row.rowIndex, 1);
 			document.getElementById("tablesabores").deleteRow(row.rowIndex);
 			let b =document.querySelector("#optionsarray")
-			b.setAttribute('value', options )
+			b.setAttribute('value', options1 )
 			// console.log(botao);
 		
 

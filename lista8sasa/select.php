@@ -126,10 +126,7 @@ $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
 
 
-$results = $db->query("select numero, mesa.nome as mesa, pizza, max(case
-when borda.preco is null then 0
-else borda.preco
-end+precoportamanho.preco) as valor, pago,
+$results = $db->query("select numero, mesa.nome as mesa, pago,
 case strftime('%w', data)
 when '0' then 'Dom'
 when '1' then 'Seg'
@@ -140,17 +137,11 @@ when '5' then 'Sex'
 when '6' then 'Sab'
 end || strftime(' %d/%m/%Y',data) as data
 from comanda 
-join pizza on pizza.comanda = comanda.numero
-join pizzasabor on pizza.codigo = pizzasabor.pizza
-join sabor on pizzasabor.sabor = sabor.codigo
-join tipo on sabor.tipo = tipo.codigo
 join mesa on mesa.codigo = comanda.mesa
-join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
-left join borda on pizza.borda = borda.codigo 
 ".$where." group by 1"." order by ".$orderby." limit ".$limit." offset ".$offset);
 while ($row = $results->fetchArray()){
 	echo "<tr>\n";
-	echo '<td>'.($row["pago"] > 0 ? '' : "<a href=\"inclui.php?numero=".$row["numero"]."\">&#x1F4DD;</a>").'</td>';
+	echo '<td>'.($row["pago"] > 0 ? "" : '<a href=\inclui.php?numero='.$row["numero"].'>&#x1F4DD;</a>').'</td>';
 	echo "<td>".$row["numero"]."</td>\n";	
 	echo "<td>".$row["data"]."</td>\n";	
 	echo "<td>\n";
@@ -171,7 +162,10 @@ echo "<a href=\"lista.php?numero=".$row["numero"]."\">&#128064;</a>\n";
 
 echo "</td>\n";	
 
-	$results4 = $db->query("select sum(tmp.preco) as valor from (select 
+	$results4 = $db->query("select case when valor is null then 0 
+	else valor
+	end as valor
+	from(select sum(tmp.preco) as valor from (select 
 	max(case
 			when borda.preco is null then 0
 			else borda.preco 
@@ -181,10 +175,10 @@ from comanda
 	join pizzasabor on pizzasabor.pizza = pizza.codigo
 	join sabor on pizzasabor.sabor = sabor.codigo
 	join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
-	left join borda on pizza.borda = borda.codigo where comanda.numero = ".$row["numero"]." group by pizza.codigo) as tmp");	
+	left join borda on pizza.borda = borda.codigo where comanda.numero = ".$row["numero"]." group by pizza.codigo) as tmp)");	
 	while ($row4 = $results4->fetchArray()){
 		echo "<td>\n";
-		echo "R$ ".number_format($row4["valor"], 2, ",",".");
+		echo "R$ ".$row4["valor"];
 		echo "</td>";	
 	}
 
