@@ -40,6 +40,8 @@ if (isset($_GET["valor"])) $value = $_GET["valor"];
 if (isset($_GET["pago"])) $value = $_GET["pago"];
 echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\"> \n";
 
+
+
 //ECHO '&#128179';
 $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
@@ -71,7 +73,7 @@ if (isset($_GET["data"])) $where[] = "data like '%".strtr($_GET["data"], " ", "%
 if (isset($_GET["mesa"])) $where[] = "mesa.nome like '%".strtr($_GET["mesa"], " ", "%")."%'";
 if (isset($_GET["pizza"])) $where[] = "pizza = '".$_GET["pizza"]."'";
 if (isset($_GET["valor"])) $where[] = "valor like '%".strtr($_GET["valor"], " ", "%")."%'";;
-if (isset($_GET["pago"])) $where[] = "pago = ".$_GET["pago"] == 'sim' ? 'pago = 1' : 'pago = 0';
+if (isset($_GET["pago"])) $where[] = "pago = ".$_GET["pago"] > 0 ? ' pago = sim' : ' pago = não';
 $where = (count($where) > 0) ? "where ".implode(" and ", $where) : "";
 
 echo $where;
@@ -124,12 +126,10 @@ $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
 
 
-
 $results = $db->query("select numero, mesa.nome as mesa, pizza, max(case
 when borda.preco is null then 0
 else borda.preco
-end+precoportamanho.preco) as valor, case
-when pago = 1 then 'sim' else 'não' end as pago,
+end+precoportamanho.preco) as valor, pago,
 case strftime('%w', data)
 when '0' then 'Dom'
 when '1' then 'Seg'
@@ -149,9 +149,8 @@ join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.ta
 left join borda on pizza.borda = borda.codigo 
 ".$where." group by 1"." order by ".$orderby." limit ".$limit." offset ".$offset);
 while ($row = $results->fetchArray()){
-		echo "<tr>\n";
-	
-	echo "<td><a href=\"inclui.php?numero=".$row["numero"]."\">&#x1F4DD;</a></td>\n";	
+	echo "<tr>\n";
+	echo '<td>'.($row["pago"] > 0 ? '' : "<a href=\"inclui.php?numero=".$row["numero"]."\">&#x1F4DD;</a>").'</td>';
 	echo "<td>".$row["numero"]."</td>\n";	
 	echo "<td>".$row["data"]."</td>\n";	
 	echo "<td>\n";
@@ -166,28 +165,37 @@ while ($row = $results->fetchArray()){
 		echo $row3["pizza"];	
 		echo "</td>";	
 	    echo "<td>\n";
+	
 }	
 echo "<a href=\"lista.php?numero=".$row["numero"]."\">&#128064;</a>\n";
-//&#128064;
+
 echo "</td>\n";	
 
-	$results4 = $db->query("select sum(tmp.preco) || ' $' as valor from (select 
+	$results4 = $db->query("select sum(tmp.preco) as valor from (select 
 	max(case
 			when borda.preco is null then 0
 			else borda.preco 
-		end + precoportamanho.preco) || ' $' as preco
+		end + precoportamanho.preco) as preco
 from comanda
 	join pizza on pizza.comanda = comanda.numero
 	join pizzasabor on pizzasabor.pizza = pizza.codigo
 	join sabor on pizzasabor.sabor = sabor.codigo
 	join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
-	left join borda on pizza.borda = borda.codigo where comanda.numero = ".$row["numero"]." group by pizza.codigo) as tmp");		
+	left join borda on pizza.borda = borda.codigo where comanda.numero = ".$row["numero"]." group by pizza.codigo) as tmp");	
 	while ($row4 = $results4->fetchArray()){
 		echo "<td>\n";
-		echo $row4["valor"];
+		echo "R$ ".number_format($row4["valor"], 2, ",",".");
 		echo "</td>";	
 	}
+
 	
+	echo "<td>".($row["pago"] > 0 ? 'sim' : 'não')."</td>\n";
+	while ($row3 = $results3->fetchArray()){
+		echo "<td>".($row["pago"] == 0 && $row3["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128181;</a>" : '')."</td>";
+		echo "<td>".($row["pago"] == 0 && $row3["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128179;</a>" : '')."</td>";
+		echo '<td>'.($row3["pizza"] == 0 ? "<a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda n. ".$row["numero"]."?'));\">&#x1F5D1;</a>" : '').'</td>';
+	}
+	/*
 	echo "<td>".$row["pago"]."</td>\n";
 	if ($row["pago"] == "não") {
 		echo "<td id='td1'>".'&#128179;'."</td>\n";
@@ -195,9 +203,9 @@ from comanda
 	} else {
 		echo "<td id='td1'>".'    '."</td>\n";
 		echo "<td id='td2'>".'    '."</td>\n"; 
-	}
-	echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda número ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
-	echo "</tr>\n";
+	}*/
+	/*echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda número ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
+	echo "</tr>\n";*/
 	}
 /*	&#128179; cartão crédito
 	&#128181; dinheiro */
