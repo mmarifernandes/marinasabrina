@@ -45,7 +45,7 @@ echo "<input type=\"text\" id=\"valor1\" name=\"valor1\" value=\"".$value."\" si
 $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
 if (isset($_GET["offset"])) $parameters[] = "offset=".$_GET["offset"];
-echo "<a href=\"\"  id=\"valida\" onclick=\" value = document.getElementById('valor1').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='select.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
+echo "<a href=\"\"  id=\"valida\" onclick=\" valida(); value = document.getElementById('valor1').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='select.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
 echo "<br>\n";
 
 echo "<table border=\"1\">\n";
@@ -66,16 +66,22 @@ echo "<td></td>\n";
 echo "</tr>\n";
 
 $where = array();
+$having = array();
+
 if (isset($_GET["numero"])) $where[] = "numero = ".$_GET["numero"];
 if (isset($_GET["data"])) $where[] = "strftime(' %d/%m/%Y',data) like '%".strtr($_GET["data"], " ", "%")."%'";;
-//if (isset($_GET["pago"])) $where[] = "pago = ".$_GET["pago"];
+if (isset($_GET["pago"])) $where[] = $_GET["pago"] == 'sim'||$_GET["pago"] == 'Sim'? "pago == 1" : "pago == 0" ;
 if (isset($_GET["mesa"])) $where[] = "mesa.nome like '%".strtr($_GET["mesa"], " ", "%")."%'";
-if (isset($_GET["pizza"])) $where[] = "pizza = '".$_GET["pizza"]."'";
+if (isset($_GET["pizza"])) $having[] = "pizza = '".$_GET["pizza"]."'";
+
 if (isset($_GET["valor"])) $where[] = "valor like '%".strtr($_GET["valor"], " ", "%")."%'";;
-if (isset($_GET["pago"])) $where[] = "pago = ".$_GET["pago"] > 0 ? ' pago = sim' : ' pago = não';
+// if (isset($_GET["pago"])) $where[] = "pago = ".$_GET["pago"] == 1 ? ' pago = sim' : ' pago = nao';
 $where = (count($where) > 0) ? "where ".implode(" and ", $where) : "";
+$having = (count($having) > 0) ? "having ".implode(" and ", $having) : "";
 
 echo $where;
+echo $having;
+
 
 if (isset($_GET["numero"])) {
 	$total = $db->query("select count(*) as total from comanda ".$where)->fetchArray()["total"];
@@ -91,7 +97,7 @@ if (isset($_GET["mesa"])) {
 }
 
 if (isset($_GET["pizza"])) {
-	$total = $db->query("select count(pizza) as total from comanda 	
+	$total = $db->query("select count(pizza.codigo) as total from comanda 	
 	join pizza on pizza.comanda = comanda.numero 
 	join pizzasabor on pizza.codigo = pizzasabor.pizza
 	 ".$where)->fetchArray()["total"];
@@ -130,7 +136,7 @@ $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
 
 
-$results = $db->query("select numero, mesa.nome as mesa, pago,
+$results = $db->query("select numero, count(pizza.codigo) as pizza, mesa.nome as mesa, pago,
 case strftime('%w', data)
 when '0' then 'Dom'
 when '1' then 'Seg'
@@ -142,27 +148,33 @@ when '6' then 'Sab'
 end || strftime(' %d/%m/%Y',data) as data
 from comanda 
 join mesa on mesa.codigo = comanda.mesa
-".$where." group by 1"." order by ".$orderby." limit ".$limit." offset ".$offset);
+left join pizza on comanda.numero = pizza.comanda
+".$where." group by 1 ".$having." order by ".$orderby." limit ".$limit." offset ".$offset);
 while ($row = $results->fetchArray()){
 	echo "<tr>\n";
 	echo '<td>'.($row["pago"] > 0 ? "" : '<a href=\inclui.php?numero='.$row["numero"].'>&#x1F4DD;</a>').'</td>';
 	echo "<td>".$row["numero"]."</td>\n";	
 	echo "<td>".$row["data"]."</td>\n";	
+	
 	echo "<td>\n";
 	$results2 = $db->query("select mesa.nome as mesa from comanda join mesa on comanda.mesa = mesa.codigo where comanda.numero = ".$row["numero"]);	
 	while ($row2 = $results2->fetchArray()) {		
 	echo $row2["mesa"];	}	
 	echo "</td>\n";	
-
-    $results3 = $db->query("select count(codigo) as pizza from pizza join comanda on pizza.comanda = comanda.numero where comanda.numero = ".$row["numero"]);	
-    while ($row3 = $results3->fetchArray()) {	
 		echo "<td>\n";
-		echo $row3["pizza"];	
-		echo "</td>";	
-	    echo "<td>\n";
+		echo $row["pizza"];	
+		echo "</td>";
+		echo "<td>\n";
+		echo "<a href=\"lista.php?numero=".$row["numero"]."\">&#128064;</a>\n";
+	echo "</td>\n";
+//     $results3 = $db->query("select count(codigo) as pizza from pizza join comanda on pizza.comanda = comanda.numero where comanda.numero = ".$row["numero"]);	
+//     while ($row3 = $results3->fetchArray()) {	
+// 		echo "<td>\n";
+// 		echo $row3["pizza"];	
+// 		echo "</td>";	
+// 	    echo "<td>\n";
 	
-}	
-echo "<a href=\"lista.php?numero=".$row["numero"]."\">&#128064;</a>\n";
+// }	
 
 echo "</td>\n";	
 
@@ -187,12 +199,12 @@ from comanda
 	}
 
 	
-	echo "<td>".($row["pago"] > 0 ? 'sim' : 'não')."</td>\n";
-	while ($row3 = $results3->fetchArray()){
-		echo "<td>".($row["pago"] == 0 && $row3["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128181;</a>" : '')."</td>";
-		echo "<td>".($row["pago"] == 0 && $row3["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128179;</a>" : '')."</td>";
-		echo '<td>'.($row3["pizza"] == 0 ? "<a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda n. ".$row["numero"]."?'));\">&#x1F5D1;</a>" : '').'</td>';
-	}
+	echo "<td>".($row["pago"] == 1 ? 'sim' : 'não')."</td>\n";
+	// while ($row3 = $results3->fetchArray()){
+	// 	echo "<td>".($row["pago"] == 0 && $row["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128181;</a>" : '')."</td>";
+	// 	echo "<td>".($row["pago"] == 0 && $row["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128179;</a>" : '')."</td>";
+	// 	echo '<td>'.($row["pizza"] == 0 ? "<a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda n. ".$row["numero"]."?'));\">&#x1F5D1;</a>" : '').'</td>';
+	// }
 	/*
 	echo "<td>".$row["pago"]."</td>\n";
 	if ($row["pago"] == "não") {
@@ -235,7 +247,7 @@ $db->close();
 		function valida() {
 		
          
-				let input = document.getElementById("valor")
+				let input = document.getElementById("valor1")
 				let select = document.getElementById("campo").value
 
 				if(select === 'numero' || select === 'pizza'){
@@ -247,6 +259,11 @@ $db->close();
 					input.setAttribute('pattern', '^([0-9]+(/[0-9]+)+)$')
 					console.log(input)
 				}
+				if(select === 'pago'){
+					input.setAttribute('pattern', '^(?:sim|nao|Sim|Não|Nao)')
+					console.log(input)
+				}
+
 				console.log(select);
 			
 					let regexp = new RegExp(input.pattern);
