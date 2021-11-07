@@ -253,6 +253,7 @@ insert into saboringrediente (sabor, ingrediente) values
 (1, 24),
 (1, 11),
 (1, 21),
+(1, 20),
 (2, 30),
 (2, 9),
 (2, 22),
@@ -15122,13 +15123,11 @@ insert into comanda (numero, data, mesa, pago) values
 (14624, '2021-02-14', 15, true),
 (14625, '2021-02-14', 12, false),
 (14626, '2021-02-14', 8, false),
-(14627, '2021-02-14', 2, false),
-/*teste*/
-(14628, '2021-02-15', 2, false);
+(14627, '2021-02-14', 2, false);
 
 insert into pizza (codigo, comanda, tamanho, borda) values
 (1, 1, 'M', null),
-(2, 1, 'P', null), /*2 pizzas*/
+(2, 1, 'P', null),
 (3, 2, 'M', null),
 (4, 3, 'G', null),
 (5, 3, 'F', 2),
@@ -44339,9 +44338,7 @@ insert into pizza (codigo, comanda, tamanho, borda) values
 (29210, 14626, 'G', null),
 (29211, 14627, 'G', null),
 (29212, 14627, 'F', 2),
-(29213, 14627, 'F', 4),
-/*teste*/
-(29214, 14628, 'F', null);
+(29213, 14627, 'F', 4);
 
 insert into pizzasabor (pizza, sabor) values
 (1, 26),
@@ -94710,3 +94707,4 @@ insert into pizzasabor (pizza, sabor) values
 (29212, 24),
 (29212, 15),
 (29213, 22);
+
