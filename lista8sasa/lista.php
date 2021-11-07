@@ -8,11 +8,9 @@ function url($campo, $valor) {
 	if (isset($_GET["borda"])) $result["borda"] = "borda=".$_GET["borda"];
 	if (isset($_GET["sabor"])) $result["sabor"] = "sabor=".$_GET["sabor"];
 	if (isset($_GET["valor"])) $result["valor"] = "valor=".$_GET["valor"];
-    if (isset($_GET["total"])) $result["total"] = "total=".$_GET["valor"];
-	if (isset($_GET["orderby"])) $result["orderby"] = "orderby=".$_GET["orderby"];
-	if (isset($_GET["offset"])) $result["offset"] = "offset=".$_GET["offset"];
+    if (isset($_GET["total"])) $result["total"] = "total=".$_GET["total"];
 	$result[$campo] = $campo."=".$valor;
-	return("lista.php?".strtr(implode("&", $result), " ", "+"));
+	return("select.php?".strtr(implode("&", $result), " ", "+"));
 }
 
 $db = new SQLite3("pizzaria.db");
@@ -28,10 +26,6 @@ if (isset($_GET["sabor"])) $value = $_GET["sabor"];
 if (isset($_GET["valor"])) $value = $_GET["valor"];
 if (isset($_GET["total"])) $value = $_GET["total"];
 
-$parameters = array();
-if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
-if (isset($_GET["offset"])) $parameters[] = "offset=".$_GET["offset"];
-
 echo "<br>\n";
 
 echo "<table border=\"1\">\n";
@@ -46,7 +40,7 @@ echo "<td><b>Sabor</b>\n";
 echo "<td><b>Valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "valor+desc")."\">&#x25B4;</a></td>\n";
 
 echo "</tr>\n";
-//echo "<td colspan=3 style=vertical-align:bottom><b>Total</b></td>\n";
+
 
 
 /*
@@ -57,12 +51,7 @@ if (isset($_GET["genero"])) $where[] = "genero = '".$_GET["genero"]."'";
 if (isset($_GET["nascimento"])) $where[] = "date(nascimento) = date('".$_GET["nascimento"]."')";
 $where = (count($where) > 0) ? "where ".implode(" and ", $where) : "";*/
 
-$total = $db->query("select count(*) as total from pizza ")->fetchArray()["total"];
 
-$orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "codigo asc";
-
-$offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
-$offset = $offset-($offset%$limit);
 /*
 $results = $db->query("select numero, mesa.nome as mesa, data, pizza, max(case
 when borda.preco is null then 0
@@ -85,7 +74,7 @@ else borda.nome
 end as borda, max(case
 when borda.preco is null then 0
 else borda.preco
-end+precoportamanho.preco) || ' $' as valor, tamanho.nome as tamanho from comanda
+end+precoportamanho.preco) as valor, tamanho.nome as tamanho from comanda
 join pizza on pizza.comanda = comanda.numero
 join pizzasabor on pizza.codigo = pizzasabor.pizza
 join sabor on pizzasabor.sabor = sabor.codigo 
@@ -95,7 +84,7 @@ join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.ta
 left join borda on pizza.borda = borda.codigo 
 join tamanho on pizza.tamanho = tamanho.codigo
 where comanda.numero = ".$_GET["numero"]." 
-group by pizza.codigo"." order by ".$orderby." limit ".$limit." offset ".$offset);
+group by pizza.codigo");
 
 while ($row = $results->fetchArray()) {
 	echo "<tr>\n";	
@@ -108,19 +97,42 @@ while ($row = $results->fetchArray()) {
         echo "<td>\n";
 		echo ucwords(strtolower($row["sabor"]));
 		echo "</td>";	
-        echo "<td>".$row["valor"]."</td>\n";
+		echo "<td>\n";
+        echo "R$ ".$row["valor"];
+		echo "</td>";
         echo "</tr>\n";
 }	
+
+$results2 = $db->query("select sum(tmp.preco) as total
+from
+	(select
+		max(case
+				when borda.preco is null then 0
+				else borda.preco
+			end+precoportamanho.preco) as preco
+	from comanda
+		join pizza on pizza.comanda = comanda.numero
+		join pizzasabor on pizzasabor.pizza = pizza.codigo
+		join sabor on pizzasabor.sabor = sabor.codigo
+		join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
+		left join borda on pizza.borda = borda.codigo
+	where comanda.numero = ".$_GET["numero"]." group by pizza.codigo) as tmp");
+
+while ($row2 = $results2->fetchArray()) {	
+        echo "<tr>\n";	
+		echo "<td colspan=3><b>Total</b></td>\n";
+		echo "<td>";
+		echo '<b>'."R$ ".$row2["total"].'</b>';
+		echo "</td>";
+        echo "</tr>\n";
+}	
+
 
 
 echo "</table>\n";
 echo "<br>\n";
 
 echo "<button onclick=history.go(-1);>Volta </button>";
-
-for ($page = 0; $page < ceil($total/$limit); $page++) {
-	echo (($offset == $page*$limit) ? ($page+1) : "<a href=\"".url("offset", $page*$limit)."\">".($page+1)."</a>")." \n";
-}
 
 $db->close();
 ?>
