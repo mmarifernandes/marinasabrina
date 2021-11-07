@@ -133,17 +133,22 @@ end || strftime(' %d/%m/%Y',data) as data from comanda where numero = ".$_GET['n
 	echo "</tr>\n";
     echo '<tbody>';
     echo '</table>';
-    echo "<input type=\"submit\" name=\"inclui\" value=\"inclui\">";
+    echo "<input type=\"submit\" name=\"inclui\" value=\"inclui\" onclick=\"return valida();\" >";
+	
     echo '</form>';
+	echo  '<div id="mensagem" align="center" style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>';
 }
         ?>
     </body>
     <script>
-        
+				
+
 	function muda() {
-			var select = document.getElementById("sabor");
+			let select = document.getElementById("sabor");
+			// let tipo = document.getElementById("tipo").value;
 			select.innerHTML = "";
-		
+			// tipo.options[1].setAttribute('selected','selected');
+
 		// console.log(select)
 	
 		switch (document.getElementById("tipo").value) {
@@ -197,6 +202,7 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 		break;
    
     }
+
 		for(let i = 0;i<select.options.length; i++){
 			select.options[i].setAttribute('id', i);
 			// console.log('asdasd')
@@ -246,17 +252,7 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 		let row = t.closest('tr');
 		let table = document.querySelector("#tablesabores");
 		let select1 = document.querySelector("#sabor")
-		// let option =select1.options[t.closest('tr').rowIndex]
-
-
-		// select1.option[options1[select1.options[t.closest('tr').rowIndex].id]].disabled = false;
-
-		// console.log(select1.options[options1[select1.options[t.closest('tr').rowIndex].id]])
-
-			// console.log(t.parentElement.previousElementSibling);
-			// let a = t.closest('tr').id;
-			// console.log(row.id-1)
-			// console.log(t.closest('tr').id);
+	
 			options1.splice(row.rowIndex, 1);
 			document.getElementById("tablesabores").deleteRow(row.rowIndex);
 			let b =document.querySelector("#optionsarray")
@@ -267,6 +263,41 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 
 	
 	};
+function mensagem(cor, texto) {
+			var div = document.getElementById("mensagem");
+			div.innerHTML = texto;
+			div.style.display = "block";
+			div.style.backgroundColor = cor;
+			setTimeout(function () {
+				div.style.display = "none";
+			}, 3000);
+		}
+
+
+
+
+			
+			
+	function valida() {
+		
+         	let table = document.querySelector("#tablesabores");
+			let select1 = document.querySelector("#sabor").value
+			console.log(select1);
+			if(table.rows.length === 0 || select1 === 'selecione'){
+
+				mensagem("red", "ERRO");
+				return false;
+				
+			}
+				mensagem("green", "OK");
+				document.getElementById("incluiform").submit();
+				// return true;
+
+			
+
+
+            }
+
     </script> 
 
 </html>

@@ -38,15 +38,14 @@ if (isset($_GET["mesa"])) $value = $_GET["mesa"];
 if (isset($_GET["pizza"])) $value = $_GET["pizza"];
 if (isset($_GET["valor"])) $value = $_GET["valor"];
 if (isset($_GET["pago"])) $value = $_GET["pago"];
-echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\"> \n";
-
+echo "<input type=\"text\" id=\"valor1\" name=\"valor1\" value=\"".$value."\" size=\"20\"> \n";
 
 
 //ECHO '&#128179';
 $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
 if (isset($_GET["offset"])) $parameters[] = "offset=".$_GET["offset"];
-echo "<a href=\"\" onclick=\"value = document.getElementById('valor').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='select.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
+echo "<a href=\"\"  id=\"valida\" onclick=\" value = document.getElementById('valor1').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='select.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
 echo "<br>\n";
 
 echo "<table border=\"1\">\n";
@@ -68,7 +67,7 @@ echo "</tr>\n";
 
 $where = array();
 if (isset($_GET["numero"])) $where[] = "numero = ".$_GET["numero"];
-if (isset($_GET["data"])) $where[] = "data like '%".strtr($_GET["data"], " ", "%")."%'";;
+if (isset($_GET["data"])) $where[] = "strftime(' %d/%m/%Y',data) like '%".strtr($_GET["data"], " ", "%")."%'";;
 //if (isset($_GET["pago"])) $where[] = "pago = ".$_GET["pago"];
 if (isset($_GET["mesa"])) $where[] = "mesa.nome like '%".strtr($_GET["mesa"], " ", "%")."%'";
 if (isset($_GET["pizza"])) $where[] = "pizza = '".$_GET["pizza"]."'";
@@ -103,19 +102,24 @@ if (isset($_GET["pago"])) {
 }
 
 if (isset($_GET["valor"])) {
-	$total = $db->query("select max(case when borda.preco is null then 0 else borda.preco end +precoportamanho.preco) as total from comanda 
+	$total = $db->query("select numero, case when valor is null then 0 
+	else valor
+	end as total
+	from(select numero, sum(tmp.preco) as valor from (select 
+	max(case
+			when borda.preco is null then 0
+			else borda.preco 
+		end + precoportamanho.preco) as preco, numero as numero
+from comanda
 	join pizza on pizza.comanda = comanda.numero
-	join pizzasabor on pizza.codigo = pizzasabor.pizza
+	join pizzasabor on pizzasabor.pizza = pizza.codigo
 	join sabor on pizzasabor.sabor = sabor.codigo
-	join tipo on sabor.tipo = tipo.codigo
-	join mesa on mesa.codigo = comanda.mesa
 	join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
-	left join borda on pizza.borda = borda.codigo
-	".$where)->fetchArray()["total"];
+	left join borda on pizza.borda = borda.codigo group by pizza.codigo) as tmp group by 1)".$where)->fetchArray()["total"];
 }
+echo $where;
 
-
-if (!isset($_GET["pago"]) && !isset($_GET["numero"]) && !isset($_GET["mesa"]) && !isset($_GET["data"]) && !isset($_GET["pizza"])){
+if (!isset($_GET["pago"]) && !isset($_GET["valor"]) && !isset($_GET["numero"]) && !isset($_GET["mesa"]) && !isset($_GET["data"]) && !isset($_GET["pizza"])){
 	$total = $db->query("select count(*) as total from comanda ".$where)->fetchArray()["total"];
 
 } 
@@ -206,6 +210,10 @@ from comanda
 
 echo "</table>\n";
 echo "<br>\n";
+
+echo  '<div id="mensagem" align="center" style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>';
+
+
 for ($page = 0; $page < ceil($total/$limit); $page++) {
 	echo (($offset == $page*$limit) ? ($page+1) : "<a href=\"".url("offset", $page*$limit)."\">".($page+1)."</a>")." \n";
 }
@@ -213,7 +221,47 @@ for ($page = 0; $page < ceil($total/$limit); $page++) {
 $db->close();
 ?>
 <script>
+	function mensagem(cor, texto) {
+			let div = document.getElementById("mensagem");
+			div.innerHTML = texto;
+			div.style.display = "block";
+			div.style.backgroundColor = cor;
+			setTimeout(function () {
+				div.style.display = "none";
+			}, 3000);
+		}
+			
 
+		function valida() {
+		
+         
+				let input = document.getElementById("valor")
+				let select = document.getElementById("campo").value
+
+				if(select === 'numero' || select === 'pizza'){
+					input.setAttribute('pattern', '[0-9]+')
+					console.log(input)
+				}
+
+				if(select === 'data'){
+					input.setAttribute('pattern', '^([0-9]+(/[0-9]+)+)$')
+					console.log(input)
+				}
+				console.log(select);
+			
+					let regexp = new RegExp(input.pattern);
+					if (!regexp.test(input.value)) {
+						mensagem("red", "ERRO");
+						input.value = "";
+						input.focus();
+						return false;
+					}else{
+						mensagem("green", "OK");
+						return true;
+					};
+            }
+		
+		
 </script>
 
 </body>
