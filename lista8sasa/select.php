@@ -200,11 +200,10 @@ from comanda
 
 	
 	echo "<td>".($row["pago"] == 1 ? 'sim' : 'não')."</td>\n";
-	// while ($row3 = $results3->fetchArray()){
-	// 	echo "<td>".($row["pago"] == 0 && $row["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128181;</a>" : '')."</td>";
-	// 	echo "<td>".($row["pago"] == 0 && $row["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128179;</a>" : '')."</td>";
-	// 	echo '<td>'.($row["pizza"] == 0 ? "<a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda n. ".$row["numero"]."?'));\">&#x1F5D1;</a>" : '').'</td>';
-	// }
+		echo "<td>".($row["pago"] == 0 && $row["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128181;</a>" : '')."</td>";
+		echo "<td>".($row["pago"] == 0 && $row["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128179;</a>" : '')."</td>";
+		echo '<td>'.($row["pizza"] == 0 ? "<a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda n. ".$row["numero"]."?'));\">&#x1F5D1;</a>" : '').'</td>';
+	
 	/*
 	echo "<td>".$row["pago"]."</td>\n";
 	if ($row["pago"] == "não") {
