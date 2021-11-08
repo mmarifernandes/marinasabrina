@@ -18,7 +18,7 @@ if (isset($_GET["codigo"])) {
 		echo "<table>\n";
 		echo "<tr>\n";
 		echo "<td>Nome</td>\n";
-		echo "<td><input type=\"text\" id=\"nome\" name=\"nome\" value=\"".ucfirst(strtolower($row["nome"]))."\" pattern=\"[a-zA-Z\s]+$\" size=\"50\" required></td>\n";
+		echo "<td><input type=\"text\" id=\"nome\" name=\"nome\" value=\"".ucfirst(strtolower($row["nome"]))."\" pattern=\"[a-zA-Z\s]+$\" required size=\"50\"></td>\n";
 		echo "</tr>\n";
 		echo "<tr>\n";
 		echo "<td>Tipo</td>\n";
@@ -73,7 +73,7 @@ if (isset($_GET["codigo"])) {
 	echo "</tr>\n";
 	
 	echo "</table>\n";
-	echo "<input type=\"submit\" name=\"confirma\" onclick=\"valida();\" value=\"confirma\">\n";
+	echo "<input type=\"submit\" name=\"confirma\" onclick=\"return valida();\" value=\"confirma\">\n";
 	echo  '<div id="mensagem" align="center" style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>';
 
 	echo "</form>\n";
@@ -85,36 +85,33 @@ $db->close();
 		$error = 0;
 			//coloque aqui o código para validação dos campos recebidos
 			//se ocorreu algum erro, preencha a variável $error com uma mensagem de erro
+			if($_POST["optionsarray"]== ""){
+			$error++;
+		}
+		if($_POST["nome"] == ""){
+			$error++;
+		}
+		if($_POST["nome"] !== "" && !preg_match("#[a-zA-Z\s]+$#", $_POST["nome"])){
+			$error++;
+		}
+
 	
 		if ($error == 0) {
 			$post = $_POST["codigo"];
-			// $x = $_POST['valor'];
 			$db = new SQLite3("pizzaria.db");
 			$db->exec("PRAGMA foreign_keys = ON");
 			$db->exec("update sabor set nome = '".strtoupper($_POST["nome"])."', tipo = '".$_POST["selecttipos"]."' where codigo = ".$_POST["codigo"]);
-			// $db->exec("update tipo set codigo = '".$_POST["tipocodigo"]."', ingrediente = '""' where codigo = ".$_POST["codigo"]);
 			$db->exec("delete from saboringrediente where sabor = " .$post);
-			// $valores = explode(",",$_POST["valores"]);
 
-			// echo $post;
 			if (isset($_POST['optionsarray'])){  
 				$x = $_POST['optionsarray'];
-				// echo $valores[1];
 				$valores2 = explode(",",$x);
-				// $total = count($valores2) + count($valores);
-					
-				// // echo $valores3[1];
 			
-				// $valores3 = array_merge($valores2, $valores);
-
-				// $valores3 = array_unique($valores3);
-				// 						print_r($valores3);
-
 				
 			
 				for($i=0;$i<count($valores2);$i++){
 				$db->exec("insert into saboringrediente (sabor, ingrediente) values ($post, '".$valores2[$i]."')");
-				// echo $valores3[$i];
+		
 				};
 			}
 
@@ -122,7 +119,7 @@ $db->close();
 			echo $db->changes()." pizza(s) alterada(s)";
 			$db->close();
 		} else {
-			echo "<font color=\"red\">Nada Alterado!</font>";
+			echo "<font color=\"red\">Erro!</font>";
 		}
 	}
 }
@@ -134,13 +131,11 @@ $db->close();
 	let i=0;
 	let table = document.querySelector("#tableingredientes");
 	for(let i = 0; i<table.rows.length; i++){
-		// console.log((document.querySelectorAll("#valores")[i]).value);
 		options.push((document.querySelectorAll("#valores")[i]).value);
 		valores.push((document.querySelectorAll("#valores")[i]).value);
 
-		
-		// console.log(valores);
 	}
+
 	for(let i = 0; i<options.length; i++){
 		let select1 = document.querySelector("#selectingredientes")
 		let option1 = document.querySelectorAll("#ingrediente")[options[i]-1]
@@ -150,35 +145,28 @@ $db->close();
 	}
 	let b =document.querySelector("#optionsarray")
 		b.setAttribute('value', options )
-	function add(){
-		let table = document.querySelector("#tableingredientes");
+		function add(){
 		let select = document.querySelector("#selectingredientes")
-		let valor = document.querySelectorAll("#ingrediente")
-		let botao = document.getElementById("mais");
-		let option = document.querySelectorAll("#ingrediente")[select.value-1]
-		options.push(select.value);
-		options;
-		valores.push(select.value);
-		valores;
-		if(option.disabled == true){
+		let option = select.options[select.selectedIndex].value;
+		
+		
+		if(options.indexOf(option) !== -1){
 			alert("Ingrediente já inserido")
 		}else{
-		option.disabled = true;
-		let x = table.insertRow(-1);
-		let rowID = table.rows.length;
+			let table = document.querySelector("#tableingredientes");
+			let x = table.insertRow(-1);
+			let rowID = table.rows.length;
+			let b =document.querySelector("#optionsarray")
+			options.push(select.value);
+
+
+
 		x.setAttribute('id', rowID );
 		x.innerHTML = '<tr><td id = '+i+'><input type="hidden" name="valor" value='+options+'>'+select.options[select.value-1].text+'</td><td><input type="button" name = "menos" id = "menos" value="menos"  width = "2%" onclick="tira(this);"></td></tr>'
 		i++;
-		let b =document.querySelector("#optionsarray")
 		b.setAttribute('value', options )
 		}
-		// console.log(select.value);
-		// console.log(option);
 
-		// console.log(select.getElementsById("ingrediente"));
-
-		// options.push(valores);
-		// console.log(valores)
 	};
 	
 	
@@ -187,26 +175,22 @@ $db->close();
 		let table = document.querySelector("#tableingredientes");
 		let select = document.querySelector("#selectingredientes")
 		let option = document.querySelectorAll("#ingrediente")[options[row.rowIndex]-1]
-		let botao = document.getElementById("mais");
-		// if(option.disabled = true){
-			// option.disabled = false;
-			// }
+
 			console.log(option)
-			let a = t.closest('tr').id;
-			console.log(row.id-1)
-			// console.log(t.closest('tr').id);
-			option.disabled = false;
+			if(option.disabled = true){
+				option.disabled = false
+			}
 			options.splice(row.rowIndex, 1);
+
+			
 			document.getElementById("tableingredientes").deleteRow(row.rowIndex);
 			let b =document.querySelector("#optionsarray")
 			b.setAttribute('value', options )
-			// console.log(botao);
-		
+
 
 
 	
 	};
-
 	function mensagem(cor, texto) {
 			var div = document.getElementById("mensagem");
 			div.innerHTML = texto;
@@ -218,7 +202,15 @@ $db->close();
 		}
 
 		function valida() {
-		
+		let table = document.querySelector("#tableingredientes");
+
+		if(table.rows.length === 0){
+
+				mensagem("red", "ERRO");
+				return false;
+				
+			}
+         
          
 				var input = document.getElementById("nome")
 				console.log(input.pattern);
