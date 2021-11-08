@@ -145,7 +145,7 @@ when '3' then 'Qua'
 when '4' then 'Qui'
 when '5' then 'Sex'
 when '6' then 'Sab'
-end || strftime(' %d/%m/%Y',data) as data
+end || strftime(' %d/%m/%Y', data) as data
 from comanda 
 join mesa on mesa.codigo = comanda.mesa
 left join pizza on comanda.numero = pizza.comanda
@@ -164,9 +164,7 @@ while ($row = $results->fetchArray()){
 		echo "<td>\n";
 		echo $row["pizza"];	
 		echo "</td>";
-		echo "<td>\n";
-		echo "<a href=\"lista.php?numero=".$row["numero"]."\">&#128064;</a>\n";
-	echo "</td>\n";
+		echo "<td>".($row["pizza"] > 0 ?  "<a href=\"lista.php?numero=".$row["numero"]."\">&#128064;</a>" : '')."</td>";
 //     $results3 = $db->query("select count(codigo) as pizza from pizza join comanda on pizza.comanda = comanda.numero where comanda.numero = ".$row["numero"]);	
 //     while ($row3 = $results3->fetchArray()) {	
 // 		echo "<td>\n";
@@ -259,7 +257,7 @@ $db->close();
 					console.log(input)
 				}
 				if(select === 'pago'){
-					input.setAttribute('pattern', '^(?:sim|nao|Sim|Não|Nao)')
+					input.setAttribute('pattern', '^(?:sim|nao|Sim|Não|Nao|não)')
 					console.log(input)
 				}
 

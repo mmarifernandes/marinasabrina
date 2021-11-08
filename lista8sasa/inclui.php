@@ -225,7 +225,7 @@ $results4 = $db->query("select sabor.codigo as saborcodigo, sabor.nome as sabor 
 		let option = select1.options[select1.selectedIndex].value;
 
 		if(options1.indexOf(option) !== -1) {
-			alert("Ingrediente já inserido");
+			alert("Sabor já inserido");
 			return;
 		}else{
 			let table = document.querySelector("#tablesabores");
