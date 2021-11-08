@@ -1,4 +1,3 @@
-
 <html>
 <body>
 <?php 
@@ -148,7 +147,7 @@ while ($row2 = $results2->fetchArray()) {
 echo "</table>\n";
 echo "<br>\n";
 
-echo "<button onclick=history.go(-1);>Volta </button>";
+echo "<button><a href=\"select.php\">Voltar</a></button>";
 
 $db->close();
 ?>
