@@ -4,19 +4,27 @@
 	$db = new SQLite3("pizzaria.db");
 	$db->exec("PRAGMA foreign_keys = ON");
 	if (isset($_POST["inclui"])) {
-		$error = "";
+		$error = 0;
 	
 		$x = $_POST['optionsarray'];
 		$valores = explode(",",$x);
-		// echo $x;
+
 		$total = $db->query("select count(*) as total from pizza")->fetchArray()["total"];
 		
 		
 		//coloque aqui o código para validação dos campos recebidos
 		//se ocorreu algum erro, preencha a variável $error com uma mensagem de erro
 		// echo $total;
+		if($_POST["optionsarray"] == ""){
+			$error++;
+		}
+
+		if ($_POST["tipo"] === 'selecione') {
+			$error++;
+		}
+
 		
-		if ($error == "") {
+		if ($error == 0) {
 			$total++;
 			$db = new SQLite3("pizzaria.db");
 			$db->exec("PRAGMA foreign_keys = ON");
@@ -39,7 +47,7 @@
 				echo $total." é o código da última pizza incluída.\n";
 				$db->close();
 			} else {
-				echo "<font color=\"red\">".$error."</font>";
+				echo "<font color=\"red\">".$error." ERRO(S)</font>";
 			}
 
 
@@ -133,7 +141,7 @@ end || strftime(' %d/%m/%Y',data) as data from comanda where numero = ".$_GET['n
 	echo "</tr>\n";
     echo '<tbody>';
     echo '</table>';
-    echo "<input type=\"submit\" name=\"inclui\" value=\"inclui\" onclick=\"return valida();\" >";
+    echo "<input type=\"submit\" name=\"inclui\" value=\"inclui\" onclick=\"return valida();\">";
 	
     echo '</form>';
 	echo  '<div id="mensagem" align="center" style="position:fixed; top:20px; left:10%; width:80%; padding:5px 5px 5px 5px; display:none;"></div>';

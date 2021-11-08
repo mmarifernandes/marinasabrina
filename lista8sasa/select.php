@@ -45,15 +45,17 @@ echo "<input type=\"text\" id=\"valor1\" name=\"valor1\" value=\"".$value."\" si
 $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
 if (isset($_GET["offset"])) $parameters[] = "offset=".$_GET["offset"];
-echo "<a href=\"\"  id=\"valida\" onclick=\" valida(); value = document.getElementById('valor1').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='select.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
+echo "<a href=\"\" id=\"valida\" onclick=\" valida(); value = document.getElementById('valor1').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='select.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
 echo "<br>\n";
 
 echo "<table border=\"1\">\n";
 echo "<tr>\n";
 echo "<td><a href=\"insert.php\">&#x1F4C4;</a></td>\n";
+// $data = strftime('%Y/%m/%d', 'data');
+
 echo "<td><b>Número</b> <a href=\"".url("orderby", "numero+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "numero+desc")."\">&#x25B4;</a></td>\n";
 
-echo "<td><b>Data</b> <a href=\"".url("orderby", "data+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "data+desc")."\">&#x25B4;</a></td>\n";
+echo "<td><b>Data</b> <a href=\"".url("orderby", "strftime('%Y/%m/%d', data)+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "strftime('%Y/%m/%d',data)+desc")."\">&#x25B4;</a></td>\n";
 
 echo "<td><b>Mesa</b> <a href=\"".url("orderby", "mesa+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "mesa+desc")."\">&#x25B4;</a></td>\n";
 
@@ -69,7 +71,7 @@ $where = array();
 $having = array();
 
 if (isset($_GET["numero"])) $where[] = "numero = ".$_GET["numero"];
-if (isset($_GET["data"])) $where[] = "strftime(' %d/%m/%Y',data) like '%".strtr($_GET["data"], " ", "%")."%'";;
+if (isset($_GET["data"])) $where[] = "strftime('%d/%m/%Y', data) like '%".strtr($_GET["data"], " ", "%")."%'";;
 if (isset($_GET["pago"])) $where[] = $_GET["pago"] == 'sim'||$_GET["pago"] == 'Sim'? "pago == 1" : "pago == 0" ;
 if (isset($_GET["mesa"])) $where[] = "mesa.nome like '%".strtr($_GET["mesa"], " ", "%")."%'";
 if (isset($_GET["pizza"])) $having[] = "pizza = '".$_GET["pizza"]."'";
@@ -145,7 +147,7 @@ when '3' then 'Qua'
 when '4' then 'Qui'
 when '5' then 'Sex'
 when '6' then 'Sab'
-end || strftime(' %d/%m/%Y', data) as data
+end || strftime(' %d/%m/%Y',data) as data
 from comanda 
 join mesa on mesa.codigo = comanda.mesa
 left join pizza on comanda.numero = pizza.comanda
@@ -155,26 +157,10 @@ while ($row = $results->fetchArray()){
 	echo '<td>'.($row["pago"] > 0 ? "" : '<a href=\inclui.php?numero='.$row["numero"].'>&#x1F4DD;</a>').'</td>';
 	echo "<td>".$row["numero"]."</td>\n";	
 	echo "<td>".$row["data"]."</td>\n";	
-	
-	echo "<td>\n";
-	$results2 = $db->query("select mesa.nome as mesa from comanda join mesa on comanda.mesa = mesa.codigo where comanda.numero = ".$row["numero"]);	
-	while ($row2 = $results2->fetchArray()) {		
-	echo $row2["mesa"];	}	
-	echo "</td>\n";	
-		echo "<td>\n";
-		echo $row["pizza"];	
-		echo "</td>";
+	echo "<td>".$row["mesa"]."</td>\n";	
+	echo "<td>" .$row["pizza"]."</td>\n";
 		echo "<td>".($row["pizza"] > 0 ?  "<a href=\"lista.php?numero=".$row["numero"]."\">&#128064;</a>" : '')."</td>";
-//     $results3 = $db->query("select count(codigo) as pizza from pizza join comanda on pizza.comanda = comanda.numero where comanda.numero = ".$row["numero"]);	
-//     while ($row3 = $results3->fetchArray()) {	
-// 		echo "<td>\n";
-// 		echo $row3["pizza"];	
-// 		echo "</td>";	
-// 	    echo "<td>\n";
-	
-// }	
 
-echo "</td>\n";	
 
 	$results4 = $db->query("select case when valor is null then 0 
 	else valor
@@ -202,20 +188,9 @@ from comanda
 		echo "<td>".($row["pago"] == 0 && $row["pizza"] > 0 ?  "<a href=\"paga.php?numero=".$row["numero"]."\">&#128179;</a>" : '')."</td>";
 		echo '<td>'.($row["pizza"] == 0 ? "<a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda n. ".$row["numero"]."?'));\">&#x1F5D1;</a>" : '').'</td>';
 	
-	/*
-	echo "<td>".$row["pago"]."</td>\n";
-	if ($row["pago"] == "não") {
-		echo "<td id='td1'>".'&#128179;'."</td>\n";
-		echo "<td id='td2'>".'&#128181;'."</td>\n"; 
-	} else {
-		echo "<td id='td1'>".'    '."</td>\n";
-		echo "<td id='td2'>".'    '."</td>\n"; 
-	}*/
-	/*echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda número ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
-	echo "</tr>\n";*/
+
 	}
-/*	&#128179; cartão crédito
-	&#128181; dinheiro */
+
 
 echo "</table>\n";
 echo "<br>\n";
@@ -258,6 +233,10 @@ $db->close();
 				}
 				if(select === 'pago'){
 					input.setAttribute('pattern', '^(?:sim|nao|Sim|Não|Nao|não)')
+					console.log(input)
+				}
+				if(select === 'mesa'){
+					input.setAttribute('pattern', "(^[0-9]).")
 					console.log(input)
 				}
 
